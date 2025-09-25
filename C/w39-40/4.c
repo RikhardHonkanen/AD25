@@ -1,7 +1,7 @@
 #include <stdio.h>
 /**
  * @brief
- * Prints "Hello World"
+ * Will compile if the number provided by -DNUMBER is 8 or 16.
  *
  * @return int
  */

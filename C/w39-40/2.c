@@ -1,6 +1,12 @@
 
 #include <stdio.h>
 
+/**
+ * @brief
+ * Prints name provided by -DUSERNAME
+ *
+ * @return int
+ */
 int main(void)
 {
 #ifdef USERNAME
