@@ -12,6 +12,12 @@ enum color
     BLACK
 };
 
+/**
+ * @brief
+ * Prints size and min/max values of C data types
+ *
+ * @return int
+ */
 int main(void)
 {
     // Char types
