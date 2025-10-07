@@ -2,20 +2,30 @@
 
 /**
  * @brief
+ *
  * Reads a date and prints it to console
  *
  * @return int
  */
-typedef struct
+struct date
 {
     int day;
     int month;
     int year;
-} date_t;
+    struct date inner_date;
+};
+
+// struct person
+// {
+//     int id;
+//     int age;
+//     char name[32];
+//     struct date birth_date;
+// };
 
 int main(void)
 {
-    date_t date;
+    struct date date;
 
     printf("Enter day (DD): \n");
     scanf(" %d", &date.day);
