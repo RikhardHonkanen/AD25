@@ -61,8 +61,7 @@ int main(void)
     y = i || j || k;             // 1
     printf("I) %d, %d\n", x, y); // I) 1, 1
 
-    SET_VARIABLES; // i = 3, j = 2, k = 0;
-    printf("i: %d, j: %d, k: %d\n", i, j, k);
+    SET_VARIABLES;                             // i = 3, j = 2, k = 0;
     y = ++i || ++j && k++;                     // 1
     printf("J) %d, %d, %d, %d\n", i, j, k, y); // J) 4, 3, 1, 1 (Actual: 4,2,0,1)
     // Note: If the left-hand side of || is non-zero, the right-hand side is not
@@ -94,7 +93,7 @@ int main(void)
     j-- || !printf("Q) Hello World!\n") || i++; // Q) Hello World!
     // j = 0 initially, so the printf runs, then j decrements. i++ runs (!true || i++)
 
-    printf("R) %d, %d\n", i, j); // 0, -1
+    printf("R) %d, %d\n", i, j); // 1, -1
 
     return 0;
 }
