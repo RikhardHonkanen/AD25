@@ -18,7 +18,7 @@ int main(void)
     double d;
 
     x = EXPRESSION;
-    printf("A) %d\n", x); // A) 1.3 -ish (prints 1)
+    printf("A) %d\n", x); // A) 1
 
     // j = 0111, k = 0110
     // j << 1 = 1110, k >> 1 = 0011
