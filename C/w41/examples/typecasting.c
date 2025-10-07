@@ -21,6 +21,9 @@ int main(void)
     unsigned int p = 48;
     (void)p; // We can discard an expression by converting it to void. i.e. (void) expression;
 
+    p = 22;
+    printf("p is now %d\n", p);
+
     int x = 300;
     char y = x; // Implicit type casting of int to char (Some part of the data is lost)
     printf("Y is %d\n", y);
