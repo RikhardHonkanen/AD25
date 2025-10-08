@@ -17,12 +17,17 @@ int main(void)
     char upper = toupper(letter);
     printf("Uppercase: %c\n", upper);
 
+    // int num1 = rand();
+    // int num2 = rand();
     srand(time(NULL));
 
-    int num1 = rand();
-    int num2 = rand();
+    for (int i = 0; i < 2; i++)
+    {
+        int num = rand();
+        printf("Random number: %d ", num);
+    };
 
-    printf("Random numbers: %d %d\n", num1, num2);
+    // printf("Random numbers: %d %d\n", num1, num2);
 
     return 0;
 }
