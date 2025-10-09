@@ -14,20 +14,18 @@ def is_arithmetic(seq):
 def main(input):  
     clean = [' '.join(s.split()[1:]) for s in input if len(s.split()) > 1]  # Get rid of useless info
     num_arrays = []
-    for s in clean: # Sort numbers into arrays so we can use the set() function later
+    for s in clean: # Sort numbers into arrays
         numbers = [int(x) for x in s.split()]
         num_arrays.append(numbers)
         
-    arr_set_sorted = []
-    for arr in num_arrays:  # Sweep 1
+    for arr in num_arrays:
         if is_arithmetic(arr):
             print(arr, "is already arithmetic")
-        else:
-            arr_set_sorted.append(sorted(set(arr)))
-            
-    for arr in arr_set_sorted: # Sweep 2 after set()
-        if is_arithmetic(arr):
-            print(arr, "can be reordered to arithmetic:", arr)
+            continue
+        
+        sort = sorted(arr)
+        if is_arithmetic(sort):
+            print(arr, "can be reordered to arithmetic:", sort)
         else:
             print(arr, "cannot form an arithmetic sequence")
 
