@@ -20,26 +20,32 @@
 #define MAX_SECRET 99
 #define GUESSES 10
 
+void flush(void)
+{
+    int c;
+    while (c = getchar() != '\n' && c != EOF)
+    {
+    } // flush bad input
+}
+
 int main(void)
 {
     srand(time(NULL));
 
 start:
-    printf("******************************************\n************** Game Started **************\n******************************************\n");
+    printf("\n******************************************\n************** Game Started **************\n******************************************\n");
     uint32_t guess;
     int remaining_guesses = GUESSES;
-    int secret = rand() % (MAX_SECRET + 1);
+    // int secret = rand() % (MAX_SECRET + 1);
+    int secret = 74;
 
     do
     {
-        (void)printf("\nAttempt %d, guess a number between 0 and %d: ", 11 - remaining_guesses, MAX_SECRET);
+        (void)printf("\nAttempt %d, guess a number between 0 and %d: ", (GUESSES + 1) - remaining_guesses, MAX_SECRET);
         if (!(1 == scanf(" %d", &guess))) // Only accept numbers
         {
             printf("\nNot a number, try again.");
-            int c;
-            while (c = getchar() != '\n' && c != EOF)
-            {
-            } // flush bad input
+            flush();
             continue;
         }
         if (guess > 99)
@@ -48,6 +54,10 @@ start:
             continue;
         }
 
+        if (guess == secret)
+        {
+            break;
+        }
         if (guess < secret)
         {
             (void)printf("\nToo low! ");
