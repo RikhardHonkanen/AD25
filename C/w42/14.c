@@ -31,7 +31,7 @@ start:
 
     do
     {
-        (void)printf("\nGuess a number between 0 and %d: ", MAX_SECRET);
+        (void)printf("\nAttempt %d, guess a number between 0 and %d: ", 11 - remaining_guesses, MAX_SECRET);
         if (!(1 == scanf(" %d", &guess))) // Only accept numbers
         {
             printf("\nNot a number, try again.");
