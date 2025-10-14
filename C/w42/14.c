@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include <stdint.h>
 
 #define MAX_SECRET 99
 #define GUESSES 10
@@ -25,7 +26,7 @@ int main(void)
 
 start:
     printf("******************************************\n************** Game Started **************\n******************************************\n");
-    int guess;
+    uint32_t guess;
     int remaining_guesses = GUESSES;
     int secret = rand() % (MAX_SECRET + 1);
 
@@ -36,9 +37,14 @@ start:
         {
             printf("\nNot a number, try again.");
             int c;
-            while ((c = getchar()) != '\n' && c != EOF)
+            while (c = getchar() != '\n' && c != EOF)
             {
             } // flush bad input
+            continue;
+        }
+        if (guess > 99)
+        {
+            printf("\nOut of range (0-99), try again.");
             continue;
         }
 
