@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
-#include <string.h>
 
 #define MAX_SECRET 99
 #define GUESSES 10
