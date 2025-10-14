@@ -63,7 +63,7 @@ start:
 
 end:
     char again;
-    (void)printf("\nPlay again (y/n)? ");
+    (void)printf("\n\nPlay again (y/n)? ");
     (void)scanf(" %c", &again);
     if (again == 'y' || again == 'Y')
     {
