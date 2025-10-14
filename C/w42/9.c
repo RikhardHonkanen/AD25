@@ -27,4 +27,6 @@ int main(void)
         }
         printf("Sum is: %d", output);
     };
+
+    return 0;
 }
