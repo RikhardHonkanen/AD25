@@ -30,7 +30,7 @@ start:
     do
     {
         (void)printf("\nGuess a number between 0 and %d: ", max);
-        if (!(1 == scanf(" %d", &guess)))
+        if (!(1 == scanf(" %d", &guess))) // Only accept numbers
         {
             printf("\nNot a number, you lose.", guess);
             goto end;
@@ -47,12 +47,12 @@ start:
         remaining_guesses--;
         if (remaining_guesses < 1)
         {
-            (void)printf("\nOut of guesses :( ");
+            (void)printf("\nOut of guesses :( "); // Game lost
             goto end;
         }
     } while (guess != secret);
 
-    (void)printf("\nCorrect!");
+    (void)printf("\nCorrect!"); // Game won
 
 end:
     char again;
