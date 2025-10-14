@@ -14,10 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
+#include <string.h>
 
 int main(void)
 {
 start:
+    printf("******************************************\n************** Game Started **************\n******************************************");
     int guess;
     int remaining_guesses = 10;
     int max = 99;
@@ -28,6 +31,23 @@ start:
     {
         (void)printf("\nGuess a number between 0 and 99: ");
         (void)scanf(" %d", &guess);
+        // fflush(stdin);
+        // int valid = 1; // assume valid until proven otherwise
+        // for (int i = 0; i < strlen(guess); i++)
+        // {
+        //     if (!isdigit((unsigned char)guess[i]))
+        //     {
+        //         valid = 0;
+        //         break; // break out of inner loop
+        //     }
+        // }
+
+        // if (!valid)
+        // {
+        //     printf("Invalid input! Please enter only digits.\n");
+        //     continue;
+        // }
+
         if (guess < secret)
         {
             (void)printf("\nToo low!: ");
