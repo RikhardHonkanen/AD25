@@ -17,33 +17,41 @@
 #include <ctype.h>
 #include <string.h>
 
+#define MAX_SECRET 99
+#define GUESSES 10
+
 int main(void)
 {
-start:
-    printf("******************************************\n************** Game Started **************\n******************************************");
-    int guess;
-    int remaining_guesses = 10;
-    int max = 99;
     srand(time(NULL));
-    int secret = rand() % (max + 1);
+
+start:
+    printf("******************************************\n************** Game Started **************\n******************************************\n");
+    int guess;
+    int remaining_guesses = GUESSES;
+    int secret = rand() % (MAX_SECRET + 1);
 
     do
     {
-        (void)printf("\nGuess a number between 0 and %d: ", max);
+        (void)printf("\nGuess a number between 0 and %d: ", MAX_SECRET);
         if (!(1 == scanf(" %d", &guess))) // Only accept numbers
         {
-            printf("\nNot a number, you lose.", guess);
-            goto end;
+            printf("\nNot a number, try again.");
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF)
+            {
+            } // flush bad input
+            continue;
         }
 
         if (guess < secret)
         {
-            (void)printf("\nToo low!: ");
+            (void)printf("\nToo low! ");
         }
         else if (guess > secret)
         {
-            (void)printf("\nToo high!: ");
+            (void)printf("\nToo high! ");
         }
+
         remaining_guesses--;
         if (remaining_guesses < 1)
         {
