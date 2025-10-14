@@ -29,24 +29,12 @@ start:
 
     do
     {
-        (void)printf("\nGuess a number between 0 and 99: ");
-        (void)scanf(" %d", &guess);
-        // fflush(stdin);
-        // int valid = 1; // assume valid until proven otherwise
-        // for (int i = 0; i < strlen(guess); i++)
-        // {
-        //     if (!isdigit((unsigned char)guess[i]))
-        //     {
-        //         valid = 0;
-        //         break; // break out of inner loop
-        //     }
-        // }
-
-        // if (!valid)
-        // {
-        //     printf("Invalid input! Please enter only digits.\n");
-        //     continue;
-        // }
+        (void)printf("\nGuess a number between 0 and %d: ", max);
+        if (!(1 == scanf(" %d", &guess)))
+        {
+            printf("\nNot a number, you lose.", guess);
+            goto end;
+        }
 
         if (guess < secret)
         {
@@ -63,6 +51,7 @@ start:
             goto end;
         }
     } while (guess != secret);
+
     (void)printf("\nCorrect!");
 
 end:
