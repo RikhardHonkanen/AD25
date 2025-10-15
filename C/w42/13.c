@@ -29,26 +29,23 @@ int main(void)
         }
         if (isspace(c))
         {
-            if (whitespace_used == 1)
+            if (whitespace_used)
             {
                 continue;
             }
-            else
-            {
-                whitespace_used = 1;
-                capitalize = 1;
-                putchar(c);
-                continue;
-            }
+            whitespace_used = 1;
+            capitalize = 1;
+            putchar(c);
+            continue;
         }
-        if (capitalize == 1)
+        if (capitalize)
         {
             putchar(toupper(c));
             capitalize = 0;
             continue;
         }
         putchar(tolower(c));
-    } while (c != '\n');
+    } while (c != '\n' && c != EOF);
 
     return 0;
 };
