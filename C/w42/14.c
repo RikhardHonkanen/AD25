@@ -36,8 +36,7 @@ start:
     printf("\n******************************************\n************** Game Started **************\n******************************************\n");
     uint32_t guess;
     int remaining_guesses = GUESSES;
-    // int secret = rand() % (MAX_SECRET + 1);
-    int secret = 74;
+    int secret = rand() % (MAX_SECRET + 1);
 
     do
     {
