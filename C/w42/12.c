@@ -19,13 +19,18 @@ int main(void)
         (void)printf("\nEnter a number between 2 and 10000: ");
         (void)scanf(" %d", &num);
     } while (num < 2 || num > 10000);
-
-    // Check divisibility from 2 to the square root of num
-    for (int i = 2; i * i <= num; i++)
+    // Check divisibility by 2
+    if (num % 2 == 0)
+    {
+        (void)printf("\n%d is not prime (divisible by 2).", num);
+        return 0;
+    }
+    // Check divisibility from 3 to the square root of num
+    for (int i = 3; i * i <= num; i += 2)
     {
         if (num % i == 0)
         {
-            (void)printf("\n%d is not prime (divisible by %d): ", num, i);
+            (void)printf("\n%d is not prime (divisible by %d).", num, i);
             return 0;
         }
     }
@@ -33,4 +38,4 @@ int main(void)
     (void)printf("\n%d is prime.", num);
 
     return 0;
-};
+}
