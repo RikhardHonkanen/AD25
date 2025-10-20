@@ -25,7 +25,6 @@ void flush_buffer(void)
     int c;
     while ((c = getchar()) != '\n' && c != EOF)
     {
-        continue;
     } // flush bad input
 }
 
@@ -35,24 +34,26 @@ int main(void)
 
 start:
     (void)printf("\n******************************************\n************** Game Started **************\n******************************************\n");
-    uint32_t guess;
     int remaining_guesses = GUESSES;
-    uint32_t secret = rand() % (MAX_SECRET + 1);
+    int usr_input; // Need to read input to a signed type to avoid overflow in scanf() assignment (and for bounds checking)
+    uint8_t guess; // Validated usr_input
+    uint8_t secret = rand() % (MAX_SECRET + 1);
 
     do
     {
         (void)printf("\nAttempt %d, guess a number between 0 and %d: ", (GUESSES + 1) - remaining_guesses, MAX_SECRET);
-        if (1 != scanf(" %d", &guess)) // Only accept numbers
+        if (1 != scanf(" %d", &usr_input)) // Only accept numbers
         {
             (void)printf("\nNot a number, try again.");
             flush_buffer();
             continue;
         }
-        if (guess > 99)
+        if (0 > usr_input || usr_input > 99)
         {
             (void)printf("\nOut of range (0-99), try again.");
             continue;
         }
+        guess = (uint8_t)usr_input;
 
         if (guess == secret)
         {
