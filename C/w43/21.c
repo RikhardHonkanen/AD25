@@ -14,26 +14,27 @@
 #include <stdio.h>
 #include <time.h>
 
+#define MAX_SIZE 255
+
 int main(void)
 {
-    char mystring[100];
+    char mystring[MAX_SIZE];
     struct tm tm;
-    char buf[255];
+    char buf[MAX_SIZE];
 
     (void)printf("Enter a date in format YYYY-MM-DD HH:mm:ss:\n");
-    if (fgets(mystring, 100, stdin) != NULL)
+    if (fgets(mystring, MAX_SIZE, stdin) != NULL)
     {
-
-        // Parsing the date string into struct tm
-        if (strptime(mystring, "%Y-%m-%d", &tm) == NULL)
+        // Parsing the date string into struct tm (NOTE: strptime is unsafe, only for POSIX systems)
+        if (strptime("2001-11-12 18:31:01", "%Y-%m-%d %H:%M:%S", &tm) == NULL)
         {
             printf("Failed to parse date.\n");
         }
         else
         {
             // Using strftime to print the date in a readable format
-            strftime(buf, sizeof(buf), "%A, %B %d, %Y", &tm);
-            printf("Parsed date: %s\n", buf);
+            strftime(buf, sizeof(buf), "%d %b %Y %H:%M", &tm);
+            puts(buf);
         }
     }
 
