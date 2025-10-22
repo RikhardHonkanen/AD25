@@ -26,14 +26,14 @@ int main(void)
     if (fgets(mystring, MAX_SIZE, stdin) != NULL)
     {
         // Parsing the date string into struct tm (NOTE: strptime is unsafe, only for POSIX systems)
-        if (strptime("2001-11-12 18:31:01", "%Y-%m-%d %H:%M:%S", &tm) == NULL)
+        if (strptime(mystring, "%Y-%m-%d %H:%M:%S", &tm) == NULL)
         {
             printf("Failed to parse date.\n");
         }
         else
         {
             // Using strftime to print the date in a readable format
-            strftime(buf, sizeof(buf), "%d %b %Y %H:%M", &tm);
+            strftime(buf, sizeof(buf), "%d %b %Y %H:%M:%S", &tm);
             puts(buf);
         }
     }
