@@ -1,11 +1,11 @@
 /**
- * @file 23.c
+ * @file 24.c
  * @author Rikhard Honkanen (rikhard.honkanen@mail.com)
  * @brief Program to fill a 2D array (2x3) of type int with random numbers
  * in the range of 0 and 99 and then print the array to the terminal.
  * To fill and print the array, use only pointers.
  * @version 0.1
- * @date 2025-10-21
+ * @date 2025-10-23
  *
  * @copyright Copyright (c) 2025
  *
