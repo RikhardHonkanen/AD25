@@ -12,14 +12,34 @@
  */
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+// Custom comparator
+int comp(const void *a, const void *b)
+{
+    // If a is smaller, positive value will be returned
+    return (*(int *)a - *(int *)b);
+}
 
 int main(void)
 {
     srand(time(NULL));
-    int arr[10] = {0};
+    int arr[10];
     int *arr_ptr = arr;
-    (void)printf("%d\n", *arr_ptr);
-    (void)printf("%d\n", (sizeof(arr) / sizeof(*arr)));
+    for (arr_ptr; (arr_ptr - arr) < sizeof(arr) / sizeof(*arr); arr_ptr++)
+    {
+        int num = rand() % (MAX + 1);
+        *arr_ptr = num;
+    }
+
+    // Sort the array using qsort
+    int n = sizeof(arr) / sizeof(arr[0]);
+    qsort(arr, n, sizeof(int), comp);
+
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
 
     return 0;
 };
