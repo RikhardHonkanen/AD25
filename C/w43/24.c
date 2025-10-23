@@ -14,7 +14,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define MAX 100
+#define MAX 99
 
 int main(void)
 {

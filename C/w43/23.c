@@ -14,7 +14,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define MAX 100
+#define MAX 99
 
 // Custom comparator
 int comp(const void *a, const void *b)
