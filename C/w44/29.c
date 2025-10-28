@@ -20,6 +20,10 @@ void print_primes_in_range(uint32_t m, uint32_t n)
     (void)printf("Primes in range: ");
     for (uint32_t i = m; i <= n; i++)
     {
+        if (i % 2 == 0)
+        {
+            continue;
+        }
         if (check_if_prime(i))
         {
             (void)printf("%d, ", i);
@@ -29,18 +33,15 @@ void print_primes_in_range(uint32_t m, uint32_t n)
 };
 int check_if_prime(int num)
 {
-    if (num % 2 == 0)
-    {
-        return 0;
-    }
+    int is_prime = 1;
     for (int i = 3; i * i <= num; i += 2) // Check divisibility from 3 to the square root of num
     {
         if (num % i == 0)
         {
-            return 0;
+            is_prime = 0;
         }
     }
-    return 1;
+    return is_prime;
 };
 int main(void)
 {
