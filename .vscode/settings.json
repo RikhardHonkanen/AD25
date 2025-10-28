@@ -5,6 +5,26 @@
     "string.h": "c",
     "string": "c",
     "xstring": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "compare": "c",
+    "complex": "c",
+    "exception": "c",
+    "functional": "c",
+    "algorithm": "c",
+    "random": "c",
+    "istream": "c",
+    "new": "c",
+    "numeric": "c",
+    "optional": "c",
+    "ostream": "c",
+    "sstream": "c",
+    "streambuf": "c",
+    "string_view": "c",
+    "system_error": "c",
+    "cmath": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "typeinfo": "c",
+    "utility": "c"
   }
 }
