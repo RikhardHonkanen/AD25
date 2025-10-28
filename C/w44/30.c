@@ -17,6 +17,8 @@
 typedef void (*func_t)(int);
 
 void add_five(int *x);
+void say_value(int x);
+void print(func_t fptr, int x);
 
 void add_five(int *x)
 {
