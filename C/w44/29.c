@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 void print_primes_in_range(uint32_t m, uint32_t n);
-int check_if_prime(int num);
+int check_if_prime(uint32_t num);
 
 void print_primes_in_range(uint32_t m, uint32_t n)
 {
@@ -31,10 +31,10 @@ void print_primes_in_range(uint32_t m, uint32_t n)
     }
     (void)printf("\n");
 };
-int check_if_prime(int num)
+int check_if_prime(uint32_t num)
 {
     int is_prime = 1;
-    for (int i = 3; i * i <= num; i += 2) // Check divisibility from 3 to the square root of num
+    for (uint32_t i = 3; i * i <= num; i += 2) // Check divisibility from 3 to the square root of num
     {
         if (num % i == 0)
         {
