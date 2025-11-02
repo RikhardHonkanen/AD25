@@ -29,14 +29,7 @@ int count_digits(int x)
 };
 int count_digits_recursively(int x)
 {
-    if (0 == x)
-    {
-        return 0;
-    }
-    else
-    {
-        return count_digits_recursively(x / 10) + 1U;
-    }
+    return x == 0 ? 0 : count_digits_recursively(x / 10) + 1U;
 };
 float calc_pwr_recursively(int base, int exp)
 {
@@ -56,7 +49,7 @@ float calc_pwr_recursively(int base, int exp)
 
 int main(void)
 {
-    int test1 = 4506;
+    int test1 = 4506999;
     int base = 2;
     int exp = -4;
 
