@@ -20,7 +20,11 @@ void print_primes_in_range(uint32_t m, uint32_t n)
     (void)printf("Primes in range: ");
     for (uint32_t i = m; i <= n; i++)
     {
-        if (i % 2 == 0)
+        if (i == 2) // 2 is the only even prime
+        {
+            (void)printf("%d, ", i);
+        }
+        if (i == 1 || i % 2 == 0) // Skip 1 and even numbers
         {
             continue;
         }
@@ -31,7 +35,7 @@ void print_primes_in_range(uint32_t m, uint32_t n)
     }
     (void)printf("\n");
 };
-int check_if_prime(uint32_t num)
+int check_if_prime(uint32_t num) // Accepts non-even numbers >= 0
 {
     int is_prime = 1;
     for (uint32_t i = 3; i * i <= num; i += 2) // Check divisibility from 3 to the square root of num
