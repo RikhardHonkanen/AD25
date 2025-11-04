@@ -15,7 +15,7 @@
 
 int main(void)
 {
-    double moves = pow(2, 64) - 1;
+    double moves = pow(2, 64) - 1; // Loss of precision, pow prototybe returns a double. More accurate is UINT64_MAX;
     double seconds_per_year = 60.0 * 60.0 * 24.0 * 365.0;
     double years = moves / seconds_per_year;
 
