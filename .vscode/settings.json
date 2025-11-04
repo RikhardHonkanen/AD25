@@ -25,6 +25,7 @@
     "tuple": "c",
     "type_traits": "c",
     "typeinfo": "c",
-    "utility": "c"
+    "utility": "c",
+    "stdint.h": "c"
   }
 }
