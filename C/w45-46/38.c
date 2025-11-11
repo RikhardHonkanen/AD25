@@ -123,18 +123,18 @@ static bool update_user(uint32_t id, const char *new_name)
                 if (user.id == id)
                 {
                     // Modify record in memory
-                    strncpy(user.name, new_name, NAME_LEN);
+                    (void)strncpy(user.name, new_name, NAME_LEN);
                     user.name[NAME_LEN] = '\0'; // ensure null termination
 
                     // Move file position back to start of this record
-                    if (fseek(file, -((long)sizeof(user)), SEEK_CUR) != 0)
+                    if (0 != fseek(file, -((long)sizeof(user)), SEEK_CUR))
                     {
                         status = false;
                         break;
                     }
 
                     // Overwrite it
-                    if (fwrite(&user, sizeof(user), 1, file) != 1)
+                    if (1 != fwrite(&user, sizeof(user), 1, file))
                     {
                         status = false;
                         break;
@@ -169,6 +169,8 @@ static bool read_users(size_t len, user_t *arr)
         }
         else
         {
+            (void)memset(arr, 0, len * sizeof(user_t)); // Clear our buffer
+
             size_t read = fread(arr, sizeof(user_t), len, file);
             if (read != len)
             {
