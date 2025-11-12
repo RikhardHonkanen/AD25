@@ -9,8 +9,8 @@
  *
  */
 
-#include <stdio.h> // Include a standard library using < and >
-#include "mylib.h" // Include a library developed by myself using double quotation marks
+#include <stdio.h>       // Include a standard library using < and >
+#include "./lib/mylib.h" // Include a library developed by myself using double quotation marks
 
 #ifndef BUFSIZE // Check if BUFSIZE has been defined or not
 #error "The buffer size is not defined!" // If BUFSIZE is not defined the error message is printed to the terminal and the compilation is stopped
@@ -48,10 +48,7 @@
 #define print_msg(x) puts(TEXT_##x) // A macro with the concatenation operator (##)
 
 // An example of a type-generic macro
-#define print(m) _Generic((m), double          \
-                          : print_double, int  \
-                          : print_int, default \
-                          : print_string)(m)
+#define print(m) _Generic((m), double: print_double, int: print_int, default: print_string)(m)
 
 // And example of defined operator
 #if defined(__unix__) && defined(__GNUC__)

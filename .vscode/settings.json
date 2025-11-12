@@ -26,6 +26,7 @@
     "type_traits": "c",
     "typeinfo": "c",
     "utility": "c",
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "mylib.h": "c"
   }
 }
