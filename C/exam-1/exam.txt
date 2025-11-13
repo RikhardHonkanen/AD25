@@ -1,0 +1,41 @@
+Create a program to allow users to create, edit and print student records according to the following requirements:
+Student records shall be stored in a binary file.
+
+A student record shall have the following fields
+ID: a unique integer greater than zero which is generated automatically
+Name: a string which is max. 32 charachters. It shall not be empty.
+Age: an integer in the range of 5 and 75
+
+The user interface shall be a menu which has the following options:
+
+A) Print All Students
+If the user presses 'a' or 'A', the program shall format and print all the student to the terminal
+
+C) Create A Student
+If the user presses 'c' or 'C', the program shall ask the user to enter age and name of the student and 
+then create and store the new student in the file.
+
+P) Print A Student
+If the user presses 'p' or 'P', the program shall ask the user to enter ID of the student to display. If 
+there is no student whose ID is equal to the entered ID, the program shall print an error message to the terminal; 
+otherwise, the student shall be formatted and printed to the terminal
+
+E) Edit A Student
+If the user presses 'e' or 'E', the program shall ask the user to enter ID of the student. If there is no student 
+whose ID is equal to the entered ID, the program shall print an error message to the terminal; otherwise it shall 
+ask the user to enter the new age and the new name of the student and then update the student record in the file. 
+If the user enters nothing for a field, the field of the student in the file shall not be changed.
+
+Q) Quit
+If the user presses 'q' or 'Q', the program shall be terminated
+The program shall validate the user input for each field
+The program shall handle errors when reading or writing from/to the file
+The code shall be well-described. 
+ 
+To get G(godkänd), all the requirements above shall be fulfilled and to get VG(väl godkänd), in addition to the G 
+requirements the code shall be well-orgnized and the menu shall also have the following option:
+
+D) Delete A Student
+If the user presses 'd' or 'D', the program shall ask the user to enter ID of the student to delete. If there is 
+no student whose ID is equal to the entered ID, the program shall print an error message to the terminal; otherwise, 
+the student shall be deleted from the file.
