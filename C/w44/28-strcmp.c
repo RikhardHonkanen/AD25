@@ -10,12 +10,21 @@
  *
  */
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 
 int strs_are_equal(char *s1, char *s2);
 
+/**
+ * @brief Returns 1 if strings are equal, 0 otherwise
+ *
+ * @param s1
+ * @param s2
+ * @return int
+ */
 int strs_are_equal(char *s1, char *s2)
 {
-    return s1 == s2;
+    return strcmp(s1, s2) == 0;
 };
 
 int main(void)
