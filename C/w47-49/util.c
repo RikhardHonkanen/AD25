@@ -1,5 +1,6 @@
 #include "util.h"
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
 
 /**
@@ -11,28 +12,18 @@
  */
 uint32_t get_greatest_common_divisor(uint16_t a, uint16_t b)
 {
-    // If a < b. Check all ints up to a/2. Then also check a. Return largest common divisor.
+    // If a < b. Check all ints up to a/2. First also check a. Return largest common divisor.
     uint32_t gcd = 1; // Return base case if no larger divisor found.
     uint32_t smallest = (b < a) ? b : a;
-    int check = 0;
-    if (smallest == b)
+    if (smallest == b && a % b == 0)
     {
-        if (a % b == 0)
-        {
-            gcd = b;
-            check = 1;
-        }
+        gcd = b;
     }
-    else if (smallest == a)
+    else if (smallest == a && b % a == 0)
     {
-        if (b % a == 0)
-        {
-            gcd = a;
-            check = 1;
-        }
+        gcd = a;
     }
-
-    if (check == 0)
+    else
     {
         for (size_t i = smallest; i >= 2; i--)
         {
@@ -74,12 +65,21 @@ uint32_t get_least_common_multiple(uint16_t a, uint16_t b)
     return lcm;
 }
 
+// Case-insensitive comp function
 int comp(const void *a, const void *b)
 {
-    // If a is smaller, positive value will be returned
-    return (*(char *)a - *(char *)b);
-}
+    char c1 = *(const char *)a;
+    char c2 = *(const char *)b;
 
+    char l1 = tolower(c1);
+    char l2 = tolower(c2);
+
+    if (l1 != l2)
+        return l1 - l2;
+
+    // If same letter, uppercase should come first
+    return c1 - c2;
+}
 /**
  * @brief Sorts a string in alphabetical order
  *
@@ -87,10 +87,24 @@ int comp(const void *a, const void *b)
  */
 char *sort_string(char *s)
 {
-    // Sort the array using qsort
-    char str[] = "jsaNSHosAlPWnSJq";
-
-    qsort(str, strlen(str), sizeof(char), comp);
-
-    return str;
+    qsort(s, strlen(s), sizeof(char), comp);
+    printf("Sorted string: %s\n", s);
+    return s;
 }
+
+/** NOTES: actual common implementations for gcd & lcm
+ *
+uint32_t get_greatest_common_divisor(uint32_t a, uint32_t b)
+{
+    while (b != 0) {
+        uint32_t temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+uint32_t get_least_common_multiple(uint32_t a, uint32_t b)
+{
+    return (a / get_greatest_common_divisor(a, b)) * b;
+}
+*/

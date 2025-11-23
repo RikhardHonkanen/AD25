@@ -35,10 +35,8 @@ int main(void)
     assert(30 == get_least_common_multiple(10, 3));
     assert(42 == get_least_common_multiple(6, 14));
 
-    char str[] = "jsaNSHosAlPWnSJq";
-    printf("%s", sort_string(str));
-
-    assert("AaHJjlNnoPqSSssW" == sort_string("jsaNSHosAlPWnSJq"));
+    char s[] = "jsaNSHosAlPWnSJq";
+    assert(strcmp(sort_string(s), "AaHJjlNnoPqSSssW") == 0);
 
     return 0;
 };
