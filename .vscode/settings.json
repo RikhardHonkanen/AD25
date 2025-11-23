@@ -27,6 +27,8 @@
     "typeinfo": "c",
     "utility": "c",
     "stdint.h": "c",
-    "mylib.h": "c"
+    "mylib.h": "c",
+    "cstdint": "cpp",
+    "util.h": "c"
   }
 }
