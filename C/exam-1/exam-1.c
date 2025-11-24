@@ -363,6 +363,7 @@ int main(void)
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
+                flush_buffer();
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!update_student(single_id))
             {
@@ -383,6 +384,7 @@ int main(void)
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
+                flush_buffer();
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!print_single_student(single_id))
             {
@@ -396,6 +398,7 @@ int main(void)
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
+                flush_buffer();
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!delete_student(single_id))
             {
