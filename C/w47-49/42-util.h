@@ -15,7 +15,6 @@
 
 #define MAX_VALUE 65535
 
-// Don't send in bigger values than max!!!
 uint32_t get_greatest_common_divisor(uint16_t a, uint16_t b);
 uint32_t get_least_common_multiple(uint16_t a, uint16_t b);
 char *sort_string(char *s);
