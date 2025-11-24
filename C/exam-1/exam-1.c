@@ -251,10 +251,17 @@ bool update_student(uint32_t id_to_update)
 
                 do
                 {
+                    char name_buf[NAME_LEN];
+                    strcpy(name_buf, temp.name);
                     (void)printf("Enter new student name: ");
                     if (fgets(temp.name, sizeof(temp.name), stdin) == NULL)
                     {
                         status = false;
+                    }
+                    else if ((strlen(temp.name) == 0))
+                    {
+                        status = true;
+                        strcpy(temp.name, name_buf); // No input, keep old name
                     }
                     else
                     {
@@ -265,7 +272,7 @@ bool update_student(uint32_t id_to_update)
                             temp.name[len - 1] = '\0';
                         }
                     }
-                } while ((status == false) || (strlen(temp.name) == 0));
+                } while ((status == false));
 
                 if (status == true)
                 {
@@ -273,7 +280,7 @@ bool update_student(uint32_t id_to_update)
                     {
                         if (fwrite(&temp, sizeof(student_t), 1, file) == 1)
                         {
-                            status = true; // success
+                            status = true;
                         }
                         else
                         {
