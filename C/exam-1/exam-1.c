@@ -315,6 +315,7 @@ bool delete_student(uint32_t id_to_delete)
 
 void print_student_header(void)
 {
+    (void)printf("\n");
     (void)printf("ID  Age Name\n");
     (void)printf("============================\n");
 }
@@ -352,8 +353,7 @@ int main(void)
         {
             if (!create_student(&id))
             {
-                (void)printf("Failed to create student!");
-                exit(1);
+                (void)printf("Failed to create student!\n");
             }
         }
         if (option == 'e' || option == 'E')
@@ -366,16 +366,14 @@ int main(void)
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!update_student(single_id))
             {
-                (void)printf("Failed to update student!");
-                exit(1);
+                (void)printf("Failed to update student!\n");
             }
         }
         else if (option == 'a' || option == 'A')
         {
             if (!print_all_students())
             {
-                (void)printf("Failed to print students!");
-                exit(1);
+                (void)printf("Failed to print students!\n");
             }
         }
         else if (option == 'p' || option == 'P')
@@ -388,8 +386,7 @@ int main(void)
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!print_single_student(single_id))
             {
-                (void)printf("Failed to print student!");
-                exit(1);
+                (void)printf("Failed to print student!\n");
             }
         }
         else if (option == 'd' || option == 'D')
@@ -402,8 +399,7 @@ int main(void)
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!delete_student(single_id))
             {
-                (void)printf("Failed to delete student!");
-                exit(1);
+                (void)printf("Failed to delete student!\n");
             }
         }
         else if (option == 'q' || option == 'Q')
