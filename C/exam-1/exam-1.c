@@ -386,7 +386,7 @@ int main(void)
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
             } while (single_id <= 0 || single_id > UINT32_MAX);
-            if (print_single_student(single_id))
+            if (!print_single_student(single_id))
             {
                 (void)printf("Failed to print student!");
                 exit(1);
