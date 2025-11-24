@@ -233,20 +233,29 @@ bool update_student(uint32_t id_to_update)
         {
             if ((temp.id == id_to_update) && (temp.id != 0))
             {
+                char age_buf[16];
                 uint8_t new_age = 0;
                 do
                 {
                     (void)printf("Enter new student age (%u-%u): ", AGE_MIN, AGE_MAX);
-                    if (scanf("%hhu", &new_age) != 1)
+                    if (fgets(age_buf, sizeof(age_buf), stdin) == NULL)
                     {
-                        flush_buffer();
+                        new_age = temp.age;
+                        break;
+                    }
+                    if (age_buf[0] == '\n')
+                    {
+                        new_age = temp.age; // No input, keep old age
+                        break;
+                    }
+                    int scanned = sscanf(age_buf, "%hhu", &new_age);
+                    if (scanned != 1)
+                    {
+                        (void)printf("Invalid input, try again.\n");
                         new_age = 0;
                     }
-                    else
-                    {
-                        flush_buffer();
-                    }
                 } while (new_age < AGE_MIN || new_age > AGE_MAX);
+
                 temp.age = new_age;
 
                 do
@@ -258,16 +267,15 @@ bool update_student(uint32_t id_to_update)
                     {
                         status = false;
                     }
-                    else if ((strlen(temp.name) == 0))
-                    {
-                        status = true;
-                        strcpy(temp.name, name_buf); // No input, keep old name
-                    }
                     else
                     {
                         status = true;
                         size_t len = strlen(temp.name);
-                        if ((len > 0) && (temp.name[len - 1] == '\n'))
+                        if (temp.name[0] == '\n')
+                        {
+                            strcpy(temp.name, name_buf); // No input, keep old name
+                        }
+                        else if ((len > 0) && (temp.name[len - 1] == '\n'))
                         {
                             temp.name[len - 1] = '\0';
                         }
