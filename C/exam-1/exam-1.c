@@ -402,7 +402,7 @@ int main(void)
             } while (single_id <= 0 || single_id > UINT32_MAX);
             if (!delete_student(single_id))
             {
-                (void)printf("Failed to print students!");
+                (void)printf("Failed to delete student!");
                 exit(1);
             }
         }
