@@ -38,6 +38,7 @@ bool print_single_student(uint32_t id);
 void print_student_header(void);
 void print_main_menu(void);
 uint32_t find_next_id(void);
+uint32_t get_single_id(void);
 void flush_buffer(void);
 
 void flush_buffer(void)
@@ -46,6 +47,19 @@ void flush_buffer(void)
     while ((c = getchar()) != '\n' && c != EOF)
     {
     } // flush bad input
+}
+
+uint32_t get_single_id(void)
+{
+    uint32_t single_id = 0;
+    do
+    {
+        (void)printf("Enter id: ");
+        (void)scanf("%d", &single_id);
+        flush_buffer();
+    } while (single_id <= 0 || single_id > UINT32_MAX);
+
+    return single_id;
 }
 
 uint32_t find_next_id(void)
@@ -358,16 +372,18 @@ int main(void)
         }
         if (option == 'e' || option == 'E')
         {
-            uint32_t single_id = 0;
-            do
-            {
-                (void)printf("Enter id: ");
-                (void)scanf("%d", &single_id);
-                flush_buffer();
-            } while (single_id <= 0 || single_id > UINT32_MAX);
+            uint32_t single_id = get_single_id();
             if (!update_student(single_id))
             {
                 (void)printf("Failed to update student!\n");
+            }
+        }
+        else if (option == 'd' || option == 'D')
+        {
+            uint32_t single_id = get_single_id();
+            if (!delete_student(single_id))
+            {
+                (void)printf("Failed to delete student!\n");
             }
         }
         else if (option == 'a' || option == 'A')
@@ -379,30 +395,10 @@ int main(void)
         }
         else if (option == 'p' || option == 'P')
         {
-            uint32_t single_id = 0;
-            do
-            {
-                (void)printf("Enter id: ");
-                (void)scanf("%d", &single_id);
-                flush_buffer();
-            } while (single_id <= 0 || single_id > UINT32_MAX);
+            uint32_t single_id = get_single_id();
             if (!print_single_student(single_id))
             {
                 (void)printf("Failed to print student!\n");
-            }
-        }
-        else if (option == 'd' || option == 'D')
-        {
-            uint32_t single_id = 0;
-            do
-            {
-                (void)printf("Enter id: ");
-                (void)scanf("%d", &single_id);
-                flush_buffer();
-            } while (single_id <= 0 || single_id > UINT32_MAX);
-            if (!delete_student(single_id))
-            {
-                (void)printf("Failed to delete student!\n");
             }
         }
         else if (option == 'q' || option == 'Q')
