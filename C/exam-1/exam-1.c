@@ -18,7 +18,6 @@
 #include <ctype.h>
 
 #define NAME_LEN 31U
-#define MAX_RECORDS 8U
 #define AGE_MIN 5U
 #define AGE_MAX 75U
 #define FILENAME "students.bin"
@@ -31,16 +30,14 @@ typedef struct
     char name[NAME_LEN + 1];
 } student_t;
 
-bool write_students_to_file(size_t len, student_t *arr);
-bool read_students_from_file(size_t len, student_t *arr);
-bool create_student(uint8_t *id, student_t *arr);
-void update_student(size_t len, uint8_t id, student_t *arr);
-void delete_student(size_t len, uint8_t id, student_t *arr);
-bool print_all_students(size_t len, student_t *arr);
-bool print_single_student(size_t len, uint8_t id, student_t *arr);
+bool create_student(uint32_t *id);
+bool update_student(uint32_t id);
+bool delete_student(uint32_t id);
+bool print_all_students(void);
+bool print_single_student(uint32_t id);
 void print_student_header(void);
 void print_main_menu(void);
-int find_next_id(size_t len, student_t *arr);
+uint32_t find_next_id(void);
 void flush_buffer(void);
 
 void flush_buffer(void)
@@ -51,278 +48,302 @@ void flush_buffer(void)
     } // flush bad input
 }
 
-int find_next_id(size_t len, student_t *arr)
+uint32_t find_next_id(void)
 {
-    int highest = 0;
-    for (size_t i = 0; i < len; i++)
+    uint32_t next_id = 1; // default if no valid records
+    FILE *file = fopen(FILENAME, "rb");
+    if (file != NULL)
     {
-        if (arr[i].id > highest)
+        if (fseek(file, 0, SEEK_END) == 0)
         {
-            highest = arr[i].id;
-        }
-    }
+            long file_size = ftell(file);
+            long record_count = file_size / sizeof(student_t);
 
-    return highest + 1;
+            for (long i = record_count - 1; i >= 0; i--)
+            {
+                if (fseek(file, i * sizeof(student_t), SEEK_SET) == 0)
+                {
+                    student_t temp;
+                    if (fread(&temp, sizeof(student_t), 1, file) == 1)
+                    {
+                        if (temp.id != 0)
+                        {
+                            next_id = temp.id + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        fclose(file);
+    }
+    return next_id;
 }
 
-bool print_single_student(size_t len, uint8_t id, student_t *arr)
+bool print_single_student(uint32_t id_to_print)
 {
     bool status = false;
 
-    if ((arr != NULL) && (id > 0))
-    {
-        status = true;
-        for (size_t i = 0; i < len; i++)
-        {
-            if (arr[i].id == id)
-            {
-                print_student_header();
-                (void)printf(STUDENT_FORMAT, arr[i].id, arr[i].age, arr[i].name);
-            }
-        }
-    }
-    return status;
-}
-
-bool print_all_students(size_t len, student_t *arr)
-{
-    printf("\n");
-    print_student_header();
-    bool status = false;
-
-    if ((arr != NULL) && (len > 0))
-    {
-        status = true;
-        for (size_t i = 0; i < len; i++)
-        {
-            if (arr[i].id == 0)
-            {
-                continue;
-            }
-
-            (void)printf(STUDENT_FORMAT, arr[i].id, arr[i].age, arr[i].name);
-        }
-    }
-
-    return status;
-}
-
-bool create_student(uint8_t *id, student_t *arr)
-{
-    bool status = true;
-    uint8_t age = 0;
-    char name[NAME_LEN] = {0};
-
-    do
-    {
-        (void)printf("Enter student age: ");
-        (void)scanf("%d", &age);
-    } while (age < 5 || age > 75);
-    flush_buffer();
-    do
-    {
-        (void)printf("Enter student name: ");
-        (void)fgets(name, sizeof(name), stdin);
-        int len = strlen(name);
-        if (name[len - 1] == '\n')
-        {
-            len--;
-            name[len] = '\0';
-        }
-    } while (strlen(name) == 0);
-
-    student_t new_student = {.id = *id, .age = age};
-    for (size_t j = 0; j < NAME_LEN; j++)
-    {
-        new_student.name[j] = name[j];
-    }
-    arr[(*id) - 1] = new_student;
-    (*id)++;
-
-    FILE *file = fopen(FILENAME, "rb+");
-
+    FILE *file = fopen(FILENAME, "rb");
     if (file == NULL)
     {
         status = false;
     }
     else
     {
-        if (1 != fwrite(arr, sizeof(student_t), 1, file))
+        student_t temp;
+        while (fread(&temp, sizeof(student_t), 1, file) == 1)
         {
-            status = false;
+            if ((temp.id == id_to_print) && (temp.id != 0))
+            {
+                print_student_header();
+                (void)printf("%u: %u  %s\n", temp.id, temp.age, temp.name);
+                status = true;
+                break; // stop after printing
+            }
+        }
+        fclose(file);
+    }
+    return status;
+}
+
+bool print_all_students(void)
+{
+    bool status = false;
+
+    FILE *file = fopen(FILENAME, "rb");
+    if (file == NULL)
+    {
+        status = false;
+    }
+    else
+    {
+        student_t temp;
+        print_student_header();
+
+        while (fread(&temp, sizeof(student_t), 1, file) == 1)
+        {
+            if (temp.id != 0) // skip logically deleted records
+            {
+                (void)printf("%u: %u  %s\n", temp.id, temp.age, temp.name);
+                status = true;
+            }
+        }
+        fclose(file);
+    }
+    return status;
+}
+
+bool create_student(uint32_t *id)
+{
+    bool status = true;
+
+    if (id == NULL)
+    {
+        status = false;
+    }
+    else
+    {
+        student_t new_student = {0};
+        new_student.id = *id;
+
+        do
+        {
+            (void)printf("Enter student age (%u-%u): ", AGE_MIN, AGE_MAX);
+            if (scanf("%hhu", &new_student.age) != 1)
+            {
+                flush_buffer();
+                new_student.age = 0;
+            }
+            else
+            {
+                flush_buffer();
+            }
+        } while (new_student.age < AGE_MIN || new_student.age > AGE_MAX);
+
+        do
+        {
+            (void)printf("Enter student name: ");
+            if (fgets(new_student.name, sizeof(new_student.name), stdin) == NULL)
+            {
+                status = false;
+            }
+            else
+            {
+                size_t len = strlen(new_student.name);
+                if (len > 0 && new_student.name[len - 1] == '\n')
+                {
+                    new_student.name[len - 1] = '\0';
+                }
+            }
+        } while ((status == true) && (strlen(new_student.name) == 0));
+
+        if (status == true)
+        {
+            FILE *file = fopen(FILENAME, "ab");
+            if (file == NULL)
+            {
+                status = false;
+            }
+            else
+            {
+                if (fwrite(&new_student, sizeof(student_t), 1, file) != 1)
+                {
+                    status = false;
+                }
+
+                fclose(file);
+            }
         }
 
-        (void)fclose(file);
+        if (status == true)
+        {
+            (*id)++;
+        }
     }
 
     return status;
 }
 
-void update_student(size_t len, uint8_t id, student_t *arr)
+bool update_student(uint32_t id_to_update)
 {
     bool status = false;
 
-    if ((arr != NULL) && (id > 0))
+    FILE *file = fopen(FILENAME, "rb+");
+    if (file == NULL)
     {
-        status = true;
-        for (size_t i = 0; i < len; i++)
+        status = false;
+    }
+    else
+    {
+        student_t temp;
+        while (fread(&temp, sizeof(student_t), 1, file) == 1)
         {
-            if (arr[i].id == id)
+            if ((temp.id == id_to_update) && (temp.id != 0))
             {
-                uint8_t age = 0;
-                char name[NAME_LEN] = {0};
+                uint8_t new_age = 0;
                 do
                 {
-                    (void)printf("Enter new student age: ");
-                    (void)scanf("%d", &age);
-                } while (age < 5 || age > 75);
-                flush_buffer();
+                    (void)printf("Enter new student age (%u-%u): ", AGE_MIN, AGE_MAX);
+                    if (scanf("%hhu", &new_age) != 1)
+                    {
+                        flush_buffer();
+                        new_age = 0;
+                    }
+                    else
+                    {
+                        flush_buffer();
+                    }
+                } while (new_age < AGE_MIN || new_age > AGE_MAX);
+                temp.age = new_age;
+
                 do
                 {
                     (void)printf("Enter new student name: ");
-                    (void)fgets(name, sizeof(name), stdin);
-                    int len = strlen(name);
-                    if (name[len - 1] == '\n')
+                    if (fgets(temp.name, sizeof(temp.name), stdin) == NULL)
                     {
-                        len--;
-                        name[len] = '\0';
+                        status = false;
                     }
-                } while (strlen(name) == 0);
+                    else
+                    {
+                        status = true;
+                        size_t len = strlen(temp.name);
+                        if ((len > 0) && (temp.name[len - 1] == '\n'))
+                        {
+                            temp.name[len - 1] = '\0';
+                        }
+                    }
+                } while ((status == false) || (strlen(temp.name) == 0));
 
-                arr[i].age = age;
-                for (size_t j = 0; j < NAME_LEN; j++)
+                if (status == true)
                 {
-                    arr[i].name[j] = name[j];
+                    if (fseek(file, -((long)sizeof(student_t)), SEEK_CUR) == 0)
+                    {
+                        if (fwrite(&temp, sizeof(student_t), 1, file) == 1)
+                        {
+                            status = true; // success
+                        }
+                        else
+                        {
+                            status = false;
+                        }
+                    }
+                    else
+                    {
+                        status = false;
+                    }
                 }
+                break;
             }
         }
+        fclose(file);
     }
     return status;
 }
 
-void delete_student(size_t len, uint8_t id, student_t *arr)
+bool delete_student(uint32_t id_to_delete)
 {
     bool status = false;
 
-    if ((arr != NULL) && (id > 0))
+    FILE *file = fopen(FILENAME, "rb+");
+    if (file == NULL)
     {
-        status = true;
-        for (size_t i = 0; i < len; i++)
+        status = false;
+    }
+    else
+    {
+        student_t temp;
+        while (fread(&temp, sizeof(student_t), 1, file) == 1)
         {
-            if (arr[i].id == id)
+            if (temp.id == id_to_delete)
             {
-                student_t blank = {0};
-                arr[i] = blank;
+                student_t blank = {0}; // Insert zeroed record in place of data
+                if (fseek(file, -((long)sizeof(student_t)), SEEK_CUR) == 0)
+                {
+                    if (fwrite(&blank, sizeof(student_t), 1, file) == 1)
+                    {
+                        status = true;
+                    }
+                }
+                break;
             }
         }
+
+        fclose(file);
     }
+
     return status;
 }
 
 void print_student_header(void)
 {
-    printf("ID  Age Name\n");
-    printf("============================\n");
+    (void)printf("ID  Age Name\n");
+    (void)printf("============================\n");
 }
 
 void print_main_menu(void)
 {
-    printf("Welcome to StudentDB(tm)!\n");
-    printf("============================\n");
-    printf("Options:\n");
-    printf("A: Print all students\n");
-    printf("C: Create new student\n");
-    printf("P: Print a single student\n");
-    printf("E: Edit existing student\n");
-    printf("D: Delete a student\n");
-    printf("Q: Quit StudentDB(tm)\n");
+    (void)printf("Welcome to StudentDB(tm)!\n");
+    (void)printf("============================\n");
+    (void)printf("Options:\n");
+    (void)printf("A: Print all students\n");
+    (void)printf("C: Create new student\n");
+    (void)printf("P: Print a single student\n");
+    (void)printf("E: Edit existing student\n");
+    (void)printf("D: Delete a student\n");
+    (void)printf("Q: Quit StudentDB(tm)\n");
 }
 
-bool write_students_to_file(size_t len, student_t *arr)
-{
-    bool status = true;
-    if ((arr == NULL) || (len == 0))
-    {
-        status = false;
-    }
-    else
-    {
-        FILE *file = fopen(FILENAME, "wb");
-
-        if (file == NULL)
-        {
-            status = false;
-        }
-        else
-        {
-            if (len != fwrite(arr, sizeof(student_t), len, file))
-            {
-                status = false;
-            }
-
-            (void)fclose(file);
-        }
-    }
-
-    return status;
-}
-
-bool read_students_from_file(size_t len, student_t *arr)
-{
-    bool status = true;
-
-    if ((arr == NULL) || (len == 0))
-    {
-        status = false;
-    }
-    else if (NULL != fopen(FILENAME, "wbx"))
-    {
-        // Create file if not exists
-        printf("Created students file!\n");
-    }
-    else
-    {
-        FILE *file = fopen(FILENAME, "rb");
-
-        if (file == NULL)
-        {
-            status = false;
-        }
-        else
-        {
-            (void)memset(arr, 0, len * sizeof(student_t));
-
-            if (len != fread(arr, sizeof(student_t), len, file))
-            {
-                status = false;
-            }
-
-            (void)fclose(file);
-        }
-    }
-
-    return status;
-}
-
-// TODO: (BUG) figure out why first record (id: 1) gets set to id: 0 after call to update or delete functions
-// The record still exists in file but will no longer get printed due to logic in program ignoring id: 0
 int main(void)
 {
-    uint8_t id = 1;
-    student_t students[MAX_RECORDS] = {0};
+    uint32_t id;
     char option = ' ';
 
-    if (!read_students_from_file(MAX_RECORDS, students))
-    {
-        (void)printf("Failed to read students!\n");
-        exit(1);
-    }
-
-    id = find_next_id(sizeof(students) / sizeof(student_t), students);
+    id = find_next_id();
 
     while (true)
     {
-        printf("\n");
+        (void)printf("\n");
         print_main_menu();
         do
         {
@@ -331,44 +352,41 @@ int main(void)
 
         if (option == 'c' || option == 'C')
         {
-            create_student(&id, students);
-            write_students_to_file(sizeof(students) / sizeof(student_t), students);
+            create_student(&id);
         }
         if (option == 'e' || option == 'E')
         {
-            uint8_t single_id = 0;
+            uint32_t single_id = 0;
             do
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
-            } while (single_id <= 0 || single_id > MAX_RECORDS);
-            update_student(sizeof(students) / sizeof(student_t), single_id, students);
-            write_students_to_file(sizeof(students) / sizeof(student_t), students);
+            } while (single_id <= 0 || single_id > UINT32_MAX);
+            update_student(single_id);
         }
         else if (option == 'a' || option == 'A')
         {
-            print_all_students(sizeof(students) / sizeof(student_t), students);
+            print_all_students();
         }
         else if (option == 'p' || option == 'P')
         {
-            uint8_t single_id = 0;
+            uint32_t single_id = 0;
             do
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
-            } while (single_id <= 0 || single_id > MAX_RECORDS);
-            print_single_student(sizeof(students) / sizeof(student_t), single_id, students);
+            } while (single_id <= 0 || single_id > UINT32_MAX);
+            print_single_student(single_id);
         }
         else if (option == 'd' || option == 'D')
         {
-            uint8_t single_id = 0;
+            uint32_t single_id = 0;
             do
             {
                 (void)printf("Enter id: ");
                 (void)scanf("%d", &single_id);
-            } while (single_id <= 0 || single_id > MAX_RECORDS);
-            delete_student(sizeof(students) / sizeof(student_t), single_id, students);
-            write_students_to_file(sizeof(students) / sizeof(student_t), students);
+            } while (single_id <= 0 || single_id > UINT32_MAX);
+            delete_student(single_id);
         }
         else if (option == 'q' || option == 'Q')
         {
