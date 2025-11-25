@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-void test_list_insert()
+void test_queue_insert()
 {
     int temp[4] = {10, 4, 22, 38};
 
@@ -32,7 +32,7 @@ void test_list_insert()
     assert(0 == queue_available());
 }
 
-void test_list_remove()
+void test_queue_remove()
 {
     int temp[3] = {5, 71, 99};
 
@@ -52,11 +52,11 @@ void test_list_remove()
 
 int main(void)
 {
-    test_list_insert();
-    (void)printf("Tested list insert successfully.\n");
+    test_queue_insert();
+    (void)printf("Tested queue insert successfully.\n");
 
-    test_list_remove();
-    (void)printf("Tested list remove successfully.\n");
+    test_queue_remove();
+    (void)printf("Tested queue remove successfully.\n");
 
     (void)printf("All tests passed!\n");
     return 0;
