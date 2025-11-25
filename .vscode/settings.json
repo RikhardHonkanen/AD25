@@ -31,6 +31,7 @@
     "cstdint": "cpp",
     "util.h": "c",
     "queue.h": "c",
-    "cstdlib": "c"
+    "cstdlib": "c",
+    "stdbool.h": "c"
   }
 }
