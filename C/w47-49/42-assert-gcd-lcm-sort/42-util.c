@@ -1,4 +1,4 @@
-#include "util.h"
+#include "42-util.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

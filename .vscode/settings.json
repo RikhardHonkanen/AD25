@@ -29,6 +29,8 @@
     "stdint.h": "c",
     "mylib.h": "c",
     "cstdint": "cpp",
-    "util.h": "c"
+    "util.h": "c",
+    "queue.h": "c",
+    "cstdlib": "c"
   }
 }
