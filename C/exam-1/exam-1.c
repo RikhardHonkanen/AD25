@@ -166,13 +166,9 @@ bool create_student(uint32_t *id)
             (void)printf("Enter student age (%u-%u): ", AGE_MIN, AGE_MAX);
             if (scanf("%hhu", &new_student.age) != 1)
             {
-                flush_buffer();
                 new_student.age = 0;
             }
-            else
-            {
-                flush_buffer();
-            }
+            flush_buffer();
         } while (new_student.age < AGE_MIN || new_student.age > AGE_MAX);
 
         do
