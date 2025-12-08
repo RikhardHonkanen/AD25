@@ -32,6 +32,7 @@
     "util.h": "c",
     "queue.h": "c",
     "cstdlib": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "assert.h": "c"
   }
 }
