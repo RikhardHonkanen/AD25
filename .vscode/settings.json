@@ -33,6 +33,7 @@
     "queue.h": "c",
     "cstdlib": "c",
     "stdbool.h": "c",
-    "assert.h": "c"
+    "assert.h": "c",
+    "array": "c"
   }
 }
