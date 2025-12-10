@@ -35,7 +35,7 @@ int main(void)
         std::cout << std::endl;
         for (int j{0}; j < 3; j++)
         {
-            std::cout << m[i][j] << " ";
+            std::cout << m[i][j] << "\t";
         }
     }
     std::cout << std::endl;

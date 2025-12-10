@@ -14,6 +14,7 @@
 #include <iostream>
 #include <array>
 #include <functional>
+#include <algorithm>
 
 int main(void)
 {
