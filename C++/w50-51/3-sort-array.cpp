@@ -22,7 +22,7 @@ int main(void)
 
     for (int i{0}; i < 10; i++)
     {
-        arr[i] = rand() % 100;
+        arr.at(i + 5) = rand() % 100;
     }
     std::cout << "Random numbers:" << std::endl;
     for (int i{0}; i < 10; i++)
