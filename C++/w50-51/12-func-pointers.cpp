@@ -32,7 +32,13 @@
 constexpr int ARR_LENGTH{10};
 constexpr int MAX_NUM{100};
 
+void fill_array(size_t length, int *arr);
+void print_array(size_t length, int *arr);
+void sort_array(size_t length, int *arr, compare_t compare);
 void swap_values(int &a, int &b);
+bool compare_asc(int a, int b);
+bool compare_desc(int a, int b);
+
 using compare_t = bool (*)(int, int);
 
 void fill_array(size_t length, int *arr)

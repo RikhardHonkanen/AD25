@@ -25,13 +25,14 @@ int main(void)
 
     for (size_t i{0}; i < user_input.length(); i++)
     {
-        if (islower(*(sptr + i)))
+        char &c = *(sptr + i);
+        if (std::islower(c))
         {
-            *(sptr + i) = toupper(*(sptr + i));
+            c = std::toupper(c);
         }
         else
         {
-            *(sptr + i) = tolower(*(sptr + i));
+            c = std::tolower(c);
         }
     }
 
