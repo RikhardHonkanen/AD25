@@ -13,15 +13,14 @@
  */
 #include <iostream>
 
-#ifdef NUMBER
-#if (NUMBER != 8) && (NUMBER != 16)
-#error "NUMBER is not 8 or 16"
+#ifndef NUMBER
+#error "NUMBER must be defined (use -DNUMBER=8 or -DNUMBER=16)"
 #endif
 
-int main(void)
+constexpr int number = NUMBER;
+static_assert(number == 8 || number == 16, "NUMBER must be 8 or 16");
+
+int main()
 {
-    std::cout << NUMBER << std::endl;
-
-    return 0;
-};
-#endif
+    std::cout << "The number is: " << number << '\n';
+}
