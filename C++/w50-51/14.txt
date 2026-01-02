@@ -1,0 +1,81 @@
+Write a program to let a user guess a secret random number in the range of 0 and 99.
+The user shall have maximum 10 attempts to guess the secret number. 
+After every guess a message should be presented to inform the user if the entered value was correct, too small or too big.
+After each game the program shall offer a new game.
+ 
+
+Example:
+
+ 
+
+
+******************************************
+
+************** Game Started **************
+
+******************************************
+
+ 
+1) Guess a number [0, 99]: 12
+
+Sorry, too small. Try again!
+
+ 
+2) Guess a number [0, 99]: 13
+
+Sorry, too small. Try again!
+
+ 
+.
+
+.
+
+.
+
+ 
+9) Guess a number [0, 99]: 88
+
+Sorry, too big. Try again!
+
+ 
+10) Guess a number [0, 99]: 90
+
+Sorry, no more attempts. The secret number is 71.
+
+ 
+Do you want to play a new game? (y/n): y
+
+ 
+******************************************
+
+************** Game Started **************
+
+******************************************
+
+ 
+1) Guess a number [0, 99]: 50
+
+Sorry, too small. Try again!
+
+ 
+2) Guess a number [0, 99]: 75
+
+Sorry, too small. Try again!
+
+ 
+3) Guess a number [0, 99]: 85
+
+Sorry, too small. Try again!
+
+ 
+4) Guess a number [0, 99]: 90
+
+Sorry, too big. Try again!
+
+ 
+5) Guess a number [0, 99]: 87
+
+Well done! You guessed the secret.
+
+ 
+Do you want to play a new game? (y/n): n
