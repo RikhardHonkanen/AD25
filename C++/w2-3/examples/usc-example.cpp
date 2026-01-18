@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cassert>
 #include <iostream>
+#include <cstdint>
 
 union Data // Members by default are public
 {
