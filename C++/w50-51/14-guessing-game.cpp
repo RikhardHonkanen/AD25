@@ -51,25 +51,20 @@ void play_game(void)
     {
         std::cout << "Unfortunately, you did not guess the secret.\n";
     }
-
-    char again;
-    do
-    {
-        std::cout << "Play again [Y/N]? ";
-        std::cin >> again;
-    } while (again != 'Y' && again != 'y' && again != 'N' && again != 'n');
-
-    if (again == 'Y' || again == 'y')
-    {
-        play_game();
-    }
 }
 
 int main(void)
 {
     srand(time(nullptr));
-    (void)greet();
-    (void)play_game();
+    greet();
+    char again;
+    do
+    {
+        play_game();
+        std::cout << "Play again [Y/N]? ";
+        std::cin >> again;
+    } while (again == 'Y' || again == 'y');
+
     std::cout << "\nThanks for playing!\n";
 
     return 0;
