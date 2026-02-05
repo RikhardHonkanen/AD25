@@ -1,0 +1,10 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define CONFIG_RESISTANCE_MIN 3000
+#define CONFIG_RESISTANCE_MAX 5000
+
+#define CONFIG_LIGHT_MIN 30
+#define CONFIG_LIGHT_MAX 80
+
+#endif
