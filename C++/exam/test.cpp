@@ -3,16 +3,7 @@
 #include <iostream>
 
 int main(void) {
-    try
-    {
-        Buffer<int> buffer{2};
-    }
-    catch (const std::exception &exp)
-    {
-        std::cout << exp.what() << ": passed!" << std::endl;
-    }
-
-    Buffer<int> buffer{4};
+    Buffer<int, 4> buffer{};
     assert(4 == buffer.capacity());
     assert(0 == buffer.available());
     std::cout << "Creating a buffer: passed!" << std::endl;
@@ -39,17 +30,19 @@ int main(void) {
 
     int item;
     assert(buffer.pop(item));
-    assert(50 == item);
+    assert(20 == item);
+    assert(buffer.pop(item));
+    assert(30 == item);
     assert(buffer.pop(item));
     assert(40 == item);
     assert(buffer.pop(item));
-    assert(30 == item);
+    assert(50 == item);
+    assert(!buffer.pop(item));
     std::cout << "Pop from buffer: passed!" << std::endl;
 
     buffer.clear();
     assert(0 == buffer.available());
     std::cout << "Clear buffer: passed!" << std::endl;
-
 
     return 0;
 }
