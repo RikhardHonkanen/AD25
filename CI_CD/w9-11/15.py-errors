@@ -1,0 +1,15 @@
+# fruits = ['apples', 'bananas', 'cherries', 'dates']
+# try:
+#     index = int(input('Enter fruit index: '))
+#     print('You chose {}'.format(fruits[index]))
+# except Exception as err:
+#     print(err, type(err))
+    
+fruits = ['apples', 'bananas', 'cherries', 'dates']
+try:
+    index = int(input('Enter fruit index: '))
+    print('You chose {}'.format(fruits[index]))
+except IndexError as err:
+    print(err)
+except ValueError as err:
+    print(err)
