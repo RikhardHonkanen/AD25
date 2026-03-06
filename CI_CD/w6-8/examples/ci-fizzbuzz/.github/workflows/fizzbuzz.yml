@@ -1,0 +1,49 @@
+# Name of the workflow
+name: FizzBuzz
+
+# The workflow is triggered on push and pull request events for all branches
+on: [push, pull_request]
+
+jobs:
+  check:
+    # This job is run for push and pull_request events on all branches
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install
+        run: sudo apt-get install build-essential zip
+      - name: Build
+        run: |
+          make && cd build
+          zip programs.zip main test
+      - name: Run The Test
+        run: make check
+      - name: Upload programs
+        uses: actions/upload-artifact@v4
+        with:
+          name: programs
+          path: build/programs.zip
+
+  release:
+    # This job is run only for push events on the main branch
+    # Don't forget to change the Workflow Permissions in the Settings of 
+    # your repository in Actions > General to Read and Write Permissions
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    name: Make Release
+    runs-on: ubuntu-latest
+    needs: [check]
+    steps:
+      - name: Download programs
+        uses: actions/download-artifact@v4
+        with:
+          name: programs
+      - name: Create Release
+        uses: crowbarmaster/GH-Automatic-Releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: true
+          title: Latest Version
+          files: programs.zip
