@@ -43,71 +43,62 @@ For VG, the G requirements shall be fulfilled and if the template type(T) is an 
 #include <stdexcept>
 #include <iostream>
 
-template <typename T>
+template <typename T, std::size_t N>
 class Buffer
 {
-    int top{-1};
-    int size{0};
-    int items{0};
-    T *array{nullptr};
-    static constexpr int SIZE_MIN{4};
+    static_assert(N >= 4, "Buffer size must be at least 4");
+
+    std::size_t head{0}; 
+    std::size_t tail{0}; 
+    std::size_t count{0};
+    T array[N]{};
 
 public:
+    Buffer() = default;
+
     Buffer(const Buffer &) = delete;            // Uncopyable
+    Buffer &operator=(const Buffer &) = delete; // Unassignable
 
-    friend std::ostream &operator<<(std::ostream &out, const Buffer &buffer)
+    friend std::ostream& operator<<(std::ostream& os, const Buffer& buffer)
     {
-        for (size_t i{0}; i < buffer.items; i++) {
-            out << "(" << buffer.array[i] << ")" << std::endl;
-        }
-        return out;
-    }
+        std::size_t index = buffer.head;
 
-    Buffer(int _size) : size{_size}
-    {
-        if (size < SIZE_MIN)
+        for (std::size_t i = 0; i < buffer.count; ++i)
         {
-            throw std::invalid_argument{"Invalid size"};
+            os << "(" << buffer.array[index] << ")\n";
+            index = (index + 1) % N;
         }
 
-        array = new T[size]{};
+        return os;
     }
 
-    bool push(const T &item) noexcept
+    bool push(const T& item) noexcept
+    {
+        array[tail] = item;
+        tail = (tail + 1) % N;
+
+        if (count == N)
+        {
+            head = (head + 1) % N;
+        }
+        else
+        {
+            ++count;
+        }
+
+        return true;
+    }
+
+    bool pop(T& item) noexcept
     {
         bool status{false};
-
-        if (top < (size - 1))
+        
+        if (count != 0) 
         {
-            top++;
             status = true;
-            array[top] = item;
-        }
-        else {
-            top = 0;
-            status = true;
-            array[top] = item;
-        }
-        if (items < size) {
-            items++;
-        }
-
-        return status;
-    }
-
-    bool pop(T &item) noexcept
-    {
-        bool status{false};
-
-        if (items > 0)
-        {
-            item = array[top];
-            status = true;
-            if (top == 0) {
-                top = size;
-            }
-            items--;
-            top--;
+            item = array[head];
+            head = (head + 1) % N;
+            --count;
         }
 
         return status;
@@ -115,48 +106,46 @@ public:
 
     int capacity(void) noexcept
     {
-        return size;
+        return N;
     }
 
     int available(void) noexcept
     {
-        return items;
+        return count;
     }
 
     bool full(void) noexcept 
     {
-        return size == items;
+        return N == count;
     }
 
     void clear(void) noexcept
     {
-        top = -1;
-        items = 0;
+        head = 0;
+        tail = 0;
+        count = 0;
     }
 
     template <typename U = T>
-    std::enable_if_t<std::is_arithmetic_v<U>, double> average(void)
+    std::enable_if_t<std::is_arithmetic_v<U>, double>
+    average() const
     {
-        double sum{0};
-        int current = top;
+        if (count == 0)
+            return 0.0;
 
-        for (size_t i{0}; i < items; i++) 
+        double sum{0.0};
+        std::size_t index = head;
+
+        for (std::size_t i = 0; i < count; ++i)
         {
-            sum += array[current];
-            if (current == 0) 
-            {
-                current = size - 1;
-            }
-            else
-            {
-                current--;
-            }
+            sum += static_cast<double>(array[index]);
+            index = (index + 1) % N;
         }
 
-        return (items == 0) ? 0 : (sum / items);
+        return sum / static_cast<double>(count);
     }
 
-    ~Buffer() { delete array; }
+    ~Buffer() = default;
 };
 
 #endif /* BUFFER_H */
