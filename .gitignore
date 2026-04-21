@@ -51,3 +51,15 @@
 
 # Output
 *.bin
+
+# Zephyr
+build/
+debug/
+
+# IDE
+.vscode
+
+# PlatformIO
+.pio
+.pioenvs
+.piolibdeps
