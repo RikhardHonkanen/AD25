@@ -1,0 +1,9 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    zephyr,user {
+        port = <&gpio0>;
+        pins = <22 23 24 25>;
+        mode = <GPIO_ACTIVE_HIGH>;
+    };
+};

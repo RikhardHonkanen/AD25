@@ -1,0 +1,7 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    zephyr,user {
+        button-gpios = <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+    };
+};

@@ -1,0 +1,19 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+	leds {
+		compatible = "gpio-leds";
+		myled: my_led {
+			label = "My LED";
+			gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+		mybtn: my_btn {
+			label = "My Switch";
+			gpios = <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		};
+	};
+};

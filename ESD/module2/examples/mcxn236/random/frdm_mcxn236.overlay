@@ -1,0 +1,5 @@
+
+&lpadc0 {
+	status = "okay";
+	voltage-ref= <0>;
+};

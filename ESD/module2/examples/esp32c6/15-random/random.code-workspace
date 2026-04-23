@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "ctr_drbg"
+		},
+		{
+			"path": "std_rand"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"ctr_drbg.h": "c"
+		}
+	}
+}
