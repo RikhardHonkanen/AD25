@@ -1,0 +1,10 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    leds {
+		myled: myled {
+			gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+			label = "My LED";
+		};
+    };
+};
