@@ -1,29 +1,31 @@
 #include "bsp.h"
 #include "led_driver.h"
 
-#define PIN_INVALID -1
-
-static int pin_num = PIN_INVALID;
+static int pin_num;
+static bool initialized = false;
 
 bool led_driver_init(int pin)
 {
-    pin_num = pin;
+    initialized = false;
 
-    return (bsp_pin_config(pin, BSP_PIN_INPUT_OUTPUT) && bsp_pin_write(pin, 0));
+    if (bsp_pin_mode(pin, BSP_GPIO_MODE_OUTPUT) && bsp_pin_write(pin, 0))
+    {
+        pin_num = pin;
+        initialized = true;
+    }
+
+    return initialized;
 }
 
 bool led_driver_set_state(int state)
 {
     bool status = false;
 
-    if (pin_num != PIN_INVALID)
+    if (initialized)
     {
         if ((state == 0) || (state == 1))
         {
-            if (bsp_pin_write(pin_num, state))
-            {
-                status = (state == bsp_pin_read(pin_num));
-            }
+            status = (bsp_pin_write(pin_num, state));
         }
     }
 
