@@ -10,9 +10,8 @@ typedef struct
         int num;
         int mode;
     } pin;
-    int (*get_state)(int);
-    bool (*set_state)(int, int);
     bool (*set_mode)(int, int);
+    bool (*set_state)(int, int);
 } led_driver_config_t;
 
 /**

@@ -18,11 +18,10 @@ esp_err_t gpio_set_direction(gpio_num_t gpio_num, gpio_mode_t mode);
 
 esp_err_t gpio_set_level(gpio_num_t gpio_num, uint32_t level);
 
-int gpio_get_level(gpio_num_t gpio_num);
-
 // Helper functions
 int gpio_get_pin_num(void);
 int gpio_get_pin_mode(void);
+int gpio_get_pin_state(void);
 void gpio_set_dir_status(bool status);
 void gpio_set_level_status(bool status);
 void gpio_set_reset_status(bool status);

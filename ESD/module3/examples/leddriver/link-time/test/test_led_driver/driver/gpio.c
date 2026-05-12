@@ -1,14 +1,11 @@
 #include "gpio.h"
 
-#define PIN_DISABLE 0
-#define PIN_INVALID -1
-
-static int pin_level = ~0;
+static int pin_state = -1;
+static gpio_num_t pin_num = -1;
+static gpio_mode_t pin_mode = 0;
 static bool pin_rst_status = false;
 static bool pin_dir_status = false;
 static bool pin_lvl_status = false;
-static gpio_num_t pin_num = PIN_INVALID;
-static gpio_mode_t pin_mode = PIN_DISABLE;
 
 esp_err_t gpio_reset_pin(gpio_num_t gpio_num)
 {
@@ -25,15 +22,17 @@ esp_err_t gpio_set_direction(gpio_num_t gpio_num, gpio_mode_t mode)
 
 esp_err_t gpio_set_level(gpio_num_t gpio_num, uint32_t level)
 {
-    pin_level = level;
     pin_num = gpio_num;
+    if (pin_lvl_status)
+    {
+        pin_state = level;
+    }
     return (pin_lvl_status ? ESP_OK : ESP_FAIL);
 }
 
-int gpio_get_level(gpio_num_t gpio_num)
+int gpio_get_pin_state(void)
 {
-    pin_num = gpio_num;
-    return (pin_lvl_status ? pin_level : !pin_level);
+    return pin_state;
 }
 
 int gpio_get_pin_num(void)
