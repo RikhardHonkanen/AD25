@@ -1,0 +1,6 @@
+/ {
+    zephyr,user {
+        spi = <&flexcomm3_lpspi3>;
+        speed = <500000>;
+    };
+};
