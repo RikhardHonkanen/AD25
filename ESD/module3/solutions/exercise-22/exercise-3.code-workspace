@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "preprocessor-time"
+		},
+		{
+			"path": "compile-time"
+		},
+		{
+			"path": "link-time"
+		},
+		{
+			"path": "run-time"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"utility.h": "c"
+		}
+	}
+}
