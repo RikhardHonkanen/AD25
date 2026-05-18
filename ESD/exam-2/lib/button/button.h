@@ -36,11 +36,4 @@ void button_update_state(void);
  */
 int button_get_state(void);
 
-/**
- * @brief This function is used to check if a falling edge event has occurred
- *
- * @return true if falling edge was registered since last call, otherwise false
- */
-bool button_get_falling_edge(void);
-
 #endif /* BUTTON_H */

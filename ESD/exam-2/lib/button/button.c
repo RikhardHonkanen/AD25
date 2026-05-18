@@ -4,29 +4,33 @@
 typedef struct
 {
     uint8_t debounced_state;
+    uint8_t stable_state;
     uint8_t previous_raw_state;
     uint8_t pin_number;
-
-    bool falling_edge;
-    bool rising_edge;
-
 } button_t;
 
-static button_t button = {0};
+static button_t button = {
+    .debounced_state = BUTTON_UNINITITIALIZED,
+    .stable_state = BUTTON_UNINITITIALIZED,
+    .previous_raw_state = BUTTON_UNINITITIALIZED,
+    .pin_number = -1,
+};
 
 static uint8_t consecutive = 1;
 
 bool button_init(int pin)
 {
-    button.pin_number = pin;
+    bool status = bsp_pin_mode(pin, 1, 0);
 
-    button.debounced_state = BUTTON_RELEASED;
-    button.previous_raw_state = BUTTON_RELEASED;
+    if (status)
+    {
+        button.debounced_state = BUTTON_RELEASED;
+        button.stable_state = BUTTON_RELEASED;
+        button.previous_raw_state = BUTTON_RELEASED;
+        button.pin_number = pin;
+    }
 
-    button.falling_edge = false;
-    button.rising_edge = false;
-
-    return bsp_pin_mode(button.pin_number, 1, 0);
+    return status;
 }
 
 void button_update_state(void)
@@ -46,24 +50,33 @@ void button_update_state(void)
 
     if (consecutive >= BUTTON_SAMPLES)
     {
-        if (raw_state != button.debounced_state)
+        if (raw_state != button.stable_state)
         {
+            button.stable_state = raw_state;
+
             if (raw_state == BUTTON_PRESSED)
             {
-                button.falling_edge = true;
+                button.debounced_state = BUTTON_FALLING_EDGE;
             }
-
-            button.debounced_state = raw_state;
+            else
+            {
+                button.debounced_state = BUTTON_RISING_EDGE;
+            }
         }
     }
 }
 
-int button_get_state(void) { return button.debounced_state; }
-
-bool button_get_falling_edge(void)
+int button_get_state(void)
 {
-    bool edge = button.falling_edge;
-    button.falling_edge = false;
+    uint8_t state = button.debounced_state;
+    if (state == BUTTON_FALLING_EDGE)
+    {
+        button.debounced_state = BUTTON_PRESSED;
+    }
+    else if (state == BUTTON_RISING_EDGE)
+    {
+        button.debounced_state = BUTTON_RELEASED;
+    }
 
-    return edge;
+    return state;
 }

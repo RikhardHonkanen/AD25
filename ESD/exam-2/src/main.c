@@ -10,7 +10,7 @@ static void button_timer_callback(TimerHandle_t xTimer)
 {
     button_update_state();
 
-    if (button_get_falling_edge())
+    if (button_get_state() == BUTTON_RISING_EDGE || button_get_state() == BUTTON_FALLING_EDGE)
     {
         static bool led_on = false;
 
@@ -22,10 +22,6 @@ static void button_timer_callback(TimerHandle_t xTimer)
 
 void app_main(void)
 {
-    ESP_ERROR_CHECK(gpio_reset_pin(BUTTON_PIN));
-    ESP_ERROR_CHECK(gpio_set_direction(BUTTON_PIN, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(BUTTON_PIN, GPIO_PULLUP_ONLY));
-
     ESP_ERROR_CHECK(gpio_reset_pin(LED_PIN));
     ESP_ERROR_CHECK(gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT));
 
