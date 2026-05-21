@@ -1,0 +1,16 @@
+{
+  "folders": [
+	{
+		"path": "esp-frdm/master"
+	},
+	{
+		"path": "esp-frdm/slave"
+	},
+	{
+		"path": "frdm-esp/master"
+	},
+	{
+		"path": "frdm-esp/slave"
+	}
+]
+}

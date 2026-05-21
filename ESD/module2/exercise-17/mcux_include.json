@@ -9,9 +9,9 @@
       "displayName": "debug-env",
       "hidden": true,
       "environment": {
-        "MCUX_VENV_PATH": "${env:HOME}/.mcuxpressotools/.venv_3_12/bin",
+        "MCUX_VENV_PATH": "/home/rikha/.mcuxpressotools/.venv_3_12/bin",
         "PATH": "$env{MCUX_VENV_PATH}${pathListSep}$penv{PATH}",
-        "ZEPHYR_BASE": "${env:HOME}/zephyr/zephyr",
+        "ZEPHYR_BASE": "/home/rikha/zephyr/zephyr",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       },
       "cacheVariables": {}
@@ -23,7 +23,7 @@
       "environment": {
         "MCUX_VENV_PATH": "${env:HOME}/.mcuxpressotools/.venv_3_12/bin",
         "PATH": "$env{MCUX_VENV_PATH}${pathListSep}$penv{PATH}",
-        "ZEPHYR_BASE": "${env:HOME}/zephyr/zephyr",
+        "ZEPHYR_BASE": "/home/rikha/zephyr/zephyr",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       },
       "cacheVariables": {}
