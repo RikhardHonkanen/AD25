@@ -1,0 +1,5 @@
+/ {
+    zephyr,user {
+        can-speed = <500000>; /* 500 kbps */
+    };
+};
