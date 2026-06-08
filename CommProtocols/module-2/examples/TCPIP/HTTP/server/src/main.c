@@ -1,16 +1,16 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include "utility.h"
-#include <esp_mac.h>
-#include <esp_log.h>
-#include <esp_wifi.h>
 #include <esp_event.h>
-#include <nvs_flash.h>
+#include <esp_http_server.h>
+#include <esp_log.h>
+#include <esp_mac.h>
 #include <esp_netif.h>
 #include <esp_system.h>
+#include <esp_wifi.h>
 #include <lwip/sockets.h>
-#include <esp_http_server.h>
+#include <nvs_flash.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #define ESP_WIFI_AP_IP "192.168.4.1"
 #define ESP_WIFI_AP_MASK "255.255.255.0"
@@ -29,7 +29,7 @@ static httpd_handle_t server = NULL;
 static const char *TAG = "wifi_ap_http_server";
 
 static const httpd_uri_t person = {
-    .uri = "/person", /* http://<server-ip>/person */
+    .uri = "/person", /* http://192.168.4.1/person */
     .method = HTTP_GET,
     .handler = person_handler,
     .user_ctx = "<h1>Hello World!</h1>",
@@ -143,7 +143,8 @@ static void webserver_start(void)
     }
 }
 
-static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
+static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_id,
+                          void *event_data)
 {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STACONNECTED)
     {
@@ -187,7 +188,8 @@ static void wifi_softap_init(void)
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL, NULL));
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
+                                                        &event_handler, NULL, NULL));
 
     /**** Static IP Configuration  ****/
     esp_netif_ip_info_t ip_info = {0};
@@ -199,14 +201,15 @@ static void wifi_softap_init(void)
     ESP_ERROR_CHECK(esp_netif_dhcps_start(esp_netif));
 
     wifi_config_t wifi_config = {
-        .ap = {
-            .ssid = ESP_WIFI_SSID,
-            .ssid_len = strlen(ESP_WIFI_SSID),
-            .channel = ESP_WIFI_CHANNEL,
-            .password = ESP_WIFI_PASS,
-            .max_connection = EPS_WIFI_MAX_CONN,
-            .authmode = (0 == strlen(ESP_WIFI_PASS)) ? WIFI_AUTH_OPEN : WIFI_AUTH_WPA_WPA2_PSK,
-        },
+        .ap =
+            {
+                .ssid = ESP_WIFI_SSID,
+                .ssid_len = strlen(ESP_WIFI_SSID),
+                .channel = ESP_WIFI_CHANNEL,
+                .password = ESP_WIFI_PASS,
+                .max_connection = EPS_WIFI_MAX_CONN,
+                .authmode = (0 == strlen(ESP_WIFI_PASS)) ? WIFI_AUTH_OPEN : WIFI_AUTH_WPA_WPA2_PSK,
+            },
     };
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config));

@@ -1,0 +1,11 @@
+#include <zephyr/dt-bindings/i2c/i2c.h>
+
+&flexcomm2_lpi2c2 {
+	clock-frequency = <I2C_BITRATE_FAST>; 
+	esp32c6: esp32c6@55 {
+		reg = <0x55>;
+		status = "okay";
+		label = "ESP32C6";
+		compatible = "zephyr,i2c-target"; /* Custom target. It is not mandatory. */
+	};
+};

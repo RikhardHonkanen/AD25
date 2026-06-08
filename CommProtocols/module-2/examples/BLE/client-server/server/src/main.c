@@ -1,15 +1,15 @@
-#include <ctype.h>
 #include "esp_bt.h"
 #include "esp_log.h"
-#include <stdbool.h>
-#include "nvs_flash.h"
-#include "nimble/ble.h"
 #include "host/ble_hs.h"
 #include "host/util/util.h"
+#include "nimble/ble.h"
 #include "nimble/nimble_port.h"
+#include "nimble/nimble_port_freertos.h"
+#include "nvs_flash.h"
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
-#include "nimble/nimble_port_freertos.h"
+#include <ctype.h>
+#include <stdbool.h>
 
 #define TAG "SERVER"
 #define DEVICE_NAME "BLE_SERVER"
@@ -18,33 +18,36 @@
 #define BLE_SVC_CHR_UUID16 0xABC1 /* 16 Bit Service Characteristic UUID */
 
 static int server_gap_event(struct ble_gap_event *event, void *arg);
-static int service_gatt_handler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt *ctxt, void *arg);
+static int service_gatt_handler(uint16_t conn_handle, uint16_t attr_handle,
+                                struct ble_gatt_access_ctxt *ctxt, void *arg);
 
 static uint8_t addr_type;
 static uint16_t ble_svc_gatt_read_val_handle;
 
 // For random static address, 2 MSB bits of the first byte shall be 0b11.
 // I.e. addr[5] shall be in the range of 0xC0 to 0xFF
-static const uint8_t server_addr[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0xC0};
-static const uint8_t client_addr[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0xC0};
+static const uint8_t server_addr[] = {0x03, 0x02, 0x03, 0x04, 0x05, 0xC0};
+static const uint8_t client_addr[] = {0x30, 0x20, 0x30, 0x40, 0x50, 0xC0};
 
 static const struct ble_gatt_svc_def new_ble_svc_gatt_defs[] = {
     {
         /* The Service */
         .type = BLE_GATT_SVC_TYPE_PRIMARY,
         .uuid = BLE_UUID16_DECLARE(BLE_SVC_UUID16),
-        .characteristics = (struct ble_gatt_chr_def[]){
-            {
-                /* The characteristic */
-                .uuid = BLE_UUID16_DECLARE(BLE_SVC_CHR_UUID16),
-                .access_cb = service_gatt_handler,
-                .val_handle = &ble_svc_gatt_read_val_handle,
-                .flags = BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_NOTIFY /* | BLE_GATT_CHR_F_READ */,
+        .characteristics =
+            (struct ble_gatt_chr_def[]){
+                {
+                    /* The characteristic */
+                    .uuid = BLE_UUID16_DECLARE(BLE_SVC_CHR_UUID16),
+                    .access_cb = service_gatt_handler,
+                    .val_handle = &ble_svc_gatt_read_val_handle,
+                    .flags =
+                        BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_NOTIFY /* | BLE_GATT_CHR_F_READ */,
+                },
+                {
+                    0, /* No more characteristics */
+                },
             },
-            {
-                0, /* No more characteristics */
-            },
-        },
     },
     {
         0, /* No more services. */
@@ -56,17 +59,21 @@ static void server_print_conn_desc(const struct ble_gap_conn_desc *desc)
 {
     char addr[18];
 
-    sprintf(addr, "%02x:%02x:%02x:%02x:%02x:%02x", desc->our_id_addr.val[5], desc->our_id_addr.val[4],
-            desc->our_id_addr.val[3], desc->our_id_addr.val[2], desc->our_id_addr.val[1], desc->our_id_addr.val[0]);
+    sprintf(addr, "%02x:%02x:%02x:%02x:%02x:%02x", desc->our_id_addr.val[5],
+            desc->our_id_addr.val[4], desc->our_id_addr.val[3], desc->our_id_addr.val[2],
+            desc->our_id_addr.val[1], desc->our_id_addr.val[0]);
     ESP_LOGI(TAG, " our_id_addr_type=%d our_id_addr=%s", desc->our_id_addr.type, addr);
 
-    sprintf(addr, "%02x:%02x:%02x:%02x:%02x:%02x", desc->peer_id_addr.val[5], desc->peer_id_addr.val[4],
-            desc->peer_id_addr.val[3], desc->peer_id_addr.val[2], desc->peer_id_addr.val[1], desc->peer_id_addr.val[0]);
+    sprintf(addr, "%02x:%02x:%02x:%02x:%02x:%02x", desc->peer_id_addr.val[5],
+            desc->peer_id_addr.val[4], desc->peer_id_addr.val[3], desc->peer_id_addr.val[2],
+            desc->peer_id_addr.val[1], desc->peer_id_addr.val[0]);
     ESP_LOGI(TAG, " peer_id_addr_type=%d peer_id_addr=%s", desc->peer_id_addr.type, addr);
 
-    ESP_LOGI(TAG, " conn_itvl=%d conn_latency=%d supervision_timeout=%d encrypted=%d authenticated=%d bonded=%d\n",
-             desc->conn_itvl, desc->conn_latency, desc->supervision_timeout, desc->sec_state.encrypted,
-             desc->sec_state.authenticated, desc->sec_state.bonded);
+    ESP_LOGI(TAG,
+             " conn_itvl=%d conn_latency=%d supervision_timeout=%d encrypted=%d authenticated=%d "
+             "bonded=%d\n",
+             desc->conn_itvl, desc->conn_latency, desc->supervision_timeout,
+             desc->sec_state.encrypted, desc->sec_state.authenticated, desc->sec_state.bonded);
 }
 
 static void server_advertise(void)
@@ -106,7 +113,8 @@ static void server_advertise(void)
         adv_params.filter_policy = BLE_HCI_ADV_FILT_BOTH;
 
         /* Start advertising */
-        status = ble_gap_adv_start(addr_type, NULL, BLE_HS_FOREVER, &adv_params, server_gap_event, NULL);
+        status =
+            ble_gap_adv_start(addr_type, NULL, BLE_HS_FOREVER, &adv_params, server_gap_event, NULL);
         if (status == 0)
         {
             ESP_LOGI(TAG, "Advertising started!");
@@ -128,8 +136,10 @@ static int server_gap_event(struct ble_gap_event *event, void *)
 
     switch (event->type)
     {
-    case BLE_GAP_EVENT_CONNECT: /* A new connection was established or a connection attempt failed. */
-        ESP_LOGI(TAG, "connection %s; status=%d ", event->connect.status == 0 ? "established" : "failed", event->connect.status);
+    case BLE_GAP_EVENT_CONNECT: /* A new connection was established or a connection attempt failed.
+                                 */
+        ESP_LOGI(TAG, "connection %s; status=%d ",
+                 event->connect.status == 0 ? "established" : "failed", event->connect.status);
         if (event->connect.status == 0)
         {
             assert(0 == ble_gap_conn_find(event->connect.conn_handle, &desc));
@@ -160,16 +170,20 @@ static int server_gap_event(struct ble_gap_event *event, void *)
         break;
 
     case BLE_GAP_EVENT_MTU:
-        /* Maximum Transmission Unit defines the maximum size of a single ATT (Attribute Protocol) payload,
-         i.e., how much data can be sent in a single BLE GATT read/write/notify/indication operation. */
-        ESP_LOGI(TAG, "MTU update event; conn_handle=%d cid=%d mtu=%d\n",
-                 event->mtu.conn_handle, event->mtu.channel_id, event->mtu.value);
+        /* Maximum Transmission Unit defines the maximum size of a single ATT (Attribute Protocol)
+         payload, i.e., how much data can be sent in a single BLE GATT read/write/notify/indication
+         operation. */
+        ESP_LOGI(TAG, "MTU update event; conn_handle=%d cid=%d mtu=%d\n", event->mtu.conn_handle,
+                 event->mtu.channel_id, event->mtu.value);
         break;
 
     case BLE_GAP_EVENT_SUBSCRIBE:
-        ESP_LOGI(TAG, "subscribe event; conn_handle=%d attr_handle=%d  reason=%d prevn=%d curn=%d previ=%d curi=%d\n",
-                 event->subscribe.conn_handle, event->subscribe.attr_handle, event->subscribe.reason, event->subscribe.prev_notify,
-                 event->subscribe.cur_notify, event->subscribe.prev_indicate, event->subscribe.cur_indicate);
+        ESP_LOGI(TAG,
+                 "subscribe event; conn_handle=%d attr_handle=%d  reason=%d prevn=%d curn=%d "
+                 "previ=%d curi=%d\n",
+                 event->subscribe.conn_handle, event->subscribe.attr_handle,
+                 event->subscribe.reason, event->subscribe.prev_notify, event->subscribe.cur_notify,
+                 event->subscribe.prev_indicate, event->subscribe.cur_indicate);
         break;
 
     default:
@@ -179,10 +193,7 @@ static int server_gap_event(struct ble_gap_event *event, void *)
     return 0;
 }
 
-static void server_on_reset(int reason)
-{
-    ESP_LOGE(TAG, "Resetting state; reason=%d\n", reason);
-}
+static void server_on_reset(int reason) { ESP_LOGE(TAG, "Resetting state; reason=%d\n", reason); }
 
 static void server_on_sync(void)
 {
@@ -196,8 +207,8 @@ static void server_on_sync(void)
     uint8_t addr_val[6] = {0};
     assert(0 == ble_hs_id_copy_addr(addr_type, addr_val, NULL));
 
-    printf("BLE Device Address: %02X:%02X:%02X:%02X:%02X:%02X\n",
-           addr_val[5], addr_val[4], addr_val[3], addr_val[2], addr_val[1], addr_val[0]);
+    printf("BLE Device Address: %02X:%02X:%02X:%02X:%02X:%02X\n", addr_val[5], addr_val[4],
+           addr_val[3], addr_val[2], addr_val[1], addr_val[0]);
 
     ble_addr_t client = {.type = BLE_ADDR_RANDOM};
     memcpy(client.val, client_addr, sizeof(client_addr));
@@ -209,7 +220,8 @@ static void server_on_sync(void)
 }
 
 /* Callback function for custom service */
-static int service_gatt_handler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt *ctxt, void *)
+static int service_gatt_handler(uint16_t conn_handle, uint16_t attr_handle,
+                                struct ble_gatt_access_ctxt *ctxt, void *)
 {
     switch (ctxt->op)
     {
@@ -219,7 +231,8 @@ static int service_gatt_handler(uint16_t conn_handle, uint16_t attr_handle, stru
 
     case BLE_GATT_ACCESS_OP_WRITE_CHR:
     {
-        ESP_LOGI(TAG, "Data received in write event, conn_handle = %x, attr_handle = %x", conn_handle, attr_handle);
+        ESP_LOGI(TAG, "Data received in write event, conn_handle = %x, attr_handle = %x",
+                 conn_handle, attr_handle);
 
         char buffer[OS_MBUF_PKTLEN(ctxt->om)];
         memset(buffer, 0, sizeof(buffer));
@@ -258,16 +271,19 @@ static void gatt_svr_register_cb(struct ble_gatt_register_ctxt *ctxt, void *)
     switch (ctxt->op)
     {
     case BLE_GATT_REGISTER_OP_SVC:
-        ESP_LOGI(TAG, "registered service %s with handle=%d\n", ble_uuid_to_str(ctxt->svc.svc_def->uuid, buf), ctxt->svc.handle);
+        ESP_LOGI(TAG, "registered service %s with handle=%d\n",
+                 ble_uuid_to_str(ctxt->svc.svc_def->uuid, buf), ctxt->svc.handle);
         break;
 
     case BLE_GATT_REGISTER_OP_CHR:
         ESP_LOGI(TAG, "registering characteristic %s with def_handle=%d val_handle=%d\n",
-                 ble_uuid_to_str(ctxt->chr.chr_def->uuid, buf), ctxt->chr.def_handle, ctxt->chr.val_handle);
+                 ble_uuid_to_str(ctxt->chr.chr_def->uuid, buf), ctxt->chr.def_handle,
+                 ctxt->chr.val_handle);
         break;
 
     case BLE_GATT_REGISTER_OP_DSC:
-        ESP_LOGI(TAG, "registering descriptor %s with handle=%d\n", ble_uuid_to_str(ctxt->dsc.dsc_def->uuid, buf), ctxt->dsc.handle);
+        ESP_LOGI(TAG, "registering descriptor %s with handle=%d\n",
+                 ble_uuid_to_str(ctxt->dsc.dsc_def->uuid, buf), ctxt->dsc.handle);
         break;
 
     default:

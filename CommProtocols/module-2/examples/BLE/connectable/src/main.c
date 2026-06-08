@@ -18,26 +18,27 @@
  *
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
+#include "driver/gpio.h"
 #include "esp_bt.h"
 #include "esp_log.h"
-#include "nvs_flash.h"
-#include "nimble/ble.h"
-#include "host/ble_hs.h"
-#include "driver/gpio.h"
-#include "host/util/util.h"
 #include "host/ble_eddystone.h"
+#include "host/ble_hs.h"
+#include "host/util/util.h"
+#include "nimble/ble.h"
 #include "nimble/nimble_port.h"
+#include "nvs_flash.h"
 #include "services/gap/ble_svc_gap.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 #define INTERVAL 50
 #define TAG "Example"
-#define DEVICE_NAME "ESP32"
+#define DEVICE_NAME "RIKHARD"
 
-// BLE defines appearance values to help remote devices understand what type of device they're interacting with.
-// Look at page 30 of https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
+// BLE defines appearance values to help remote devices understand what type of device they're
+// interacting with. Look at page 30 of
+// https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
 #define BLE_GAP_APPEARANCE_GENERIC_TAG 0x0200
 
 static void start_advertising(void);
@@ -51,13 +52,15 @@ static void print_conn_desc(struct ble_gap_conn_desc *desc)
     ESP_LOGI(TAG, "Connection handle: %d", desc->conn_handle);
 
     /* Local ID address */
-    sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", desc->our_id_addr.val[5], desc->our_id_addr.val[4],
-            desc->our_id_addr.val[3], desc->our_id_addr.val[2], desc->our_id_addr.val[1], desc->our_id_addr.val[0]);
+    sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", desc->our_id_addr.val[5],
+            desc->our_id_addr.val[4], desc->our_id_addr.val[3], desc->our_id_addr.val[2],
+            desc->our_id_addr.val[1], desc->our_id_addr.val[0]);
     ESP_LOGI(TAG, "Device id address: type = %d, value = %s", desc->our_id_addr.type, addr_str);
 
     /* Peer ID address */
-    sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", desc->peer_id_addr.val[5], desc->peer_id_addr.val[4],
-            desc->peer_id_addr.val[3], desc->peer_id_addr.val[2], desc->peer_id_addr.val[1], desc->peer_id_addr.val[0]);
+    sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", desc->peer_id_addr.val[5],
+            desc->peer_id_addr.val[4], desc->peer_id_addr.val[3], desc->peer_id_addr.val[2],
+            desc->peer_id_addr.val[1], desc->peer_id_addr.val[0]);
     ESP_LOGI(TAG, "Peer id address: type = %d, value = %s", desc->peer_id_addr.type, addr_str);
 
     /* Connection info */
@@ -65,8 +68,7 @@ static void print_conn_desc(struct ble_gap_conn_desc *desc)
              "conn_itvl = %d, conn_latency = %d, supervision_timeout = %d, "
              "encrypted = %d, authenticated = %d, bonded = %d\n",
              desc->conn_itvl, desc->conn_latency, desc->supervision_timeout,
-             desc->sec_state.encrypted, desc->sec_state.authenticated,
-             desc->sec_state.bonded);
+             desc->sec_state.encrypted, desc->sec_state.authenticated, desc->sec_state.bonded);
 }
 
 static int gap_event_handler(struct ble_gap_event *event, void *)
@@ -77,10 +79,12 @@ static int gap_event_handler(struct ble_gap_event *event, void *)
     switch (event->type)
     {
     case BLE_GAP_EVENT_CONNECT: /* Connect event */
-        ESP_LOGI(TAG, "Connection %s; status = %d", event->connect.status == 0 ? "established" : "failed", event->connect.status);
+        ESP_LOGI(TAG, "Connection %s; status = %d",
+                 event->connect.status == 0 ? "established" : "failed", event->connect.status);
         if (event->connect.status == 0) /* Connection succeeded */
         {
-            status = ble_gap_conn_find(event->connect.conn_handle, &desc); /* Check connection handle */
+            status =
+                ble_gap_conn_find(event->connect.conn_handle, &desc); /* Check connection handle */
             if (status == 0)
             {
                 ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_4, 1));
@@ -90,12 +94,16 @@ static int gap_event_handler(struct ble_gap_event *event, void *)
                 struct ble_gap_upd_params params = {
                     .itvl_min = desc.conn_itvl,
                     .itvl_max = desc.conn_itvl,
-                    .latency = 3,                                    // The number of connection events the peripheral can skip to save power.
-                    .supervision_timeout = desc.supervision_timeout, // The maximum time between two successful data exchanges before
-                                                                     // the BLE connection is considered lost.
+                    .latency =
+                        3, // The number of connection events the peripheral can skip to save power.
+                    .supervision_timeout =
+                        desc.supervision_timeout, // The maximum time between two successful data
+                                                  // exchanges before the BLE connection is
+                                                  // considered lost.
                 };
 
-                status = ble_gap_update_params(event->connect.conn_handle, &params); /* Update connection parameters */
+                status = ble_gap_update_params(event->connect.conn_handle,
+                                               &params); /* Update connection parameters */
                 if (status != 0)
                 {
                     ESP_LOGE(TAG, "Failed to update connection parameters, error code: %d", status);
@@ -118,9 +126,12 @@ static int gap_event_handler(struct ble_gap_event *event, void *)
         start_advertising(); /* Start advertising */
         break;
 
-    case BLE_GAP_EVENT_CONN_UPDATE:                                                  /* Connection parameters update event */
-        ESP_LOGI(TAG, "Connection updated; status = %d", event->conn_update.status); /* The central has updated the connection parameters. */
-        status = ble_gap_conn_find(event->conn_update.conn_handle, &desc);           /* Check connection handle */
+    case BLE_GAP_EVENT_CONN_UPDATE: /* Connection parameters update event */
+        ESP_LOGI(
+            TAG, "Connection updated; status = %d",
+            event->conn_update.status); /* The central has updated the connection parameters. */
+        status =
+            ble_gap_conn_find(event->conn_update.conn_handle, &desc); /* Check connection handle */
         if (status == 0)
         {
             print_conn_desc(&desc);
@@ -176,8 +187,10 @@ static void start_advertising(void)
 
         /* Set Manufacturer Data */
         // The first 2 bytes are the manufacturer ID (Espressif: 0x02E5)
-        // Look at page 214 in https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
-        const uint8_t manufacturer[] = {0xE5, 0x02, 'Y', 'H', ' ', 'A', 'k', 'a', 'd', 'e', 'm', 'i', 'n'};
+        // Look at page 214 in
+        // https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
+        const uint8_t manufacturer[] = {0xE5, 0x02, 'Y', 'H', ' ', 'A', 'k',
+                                        'a',  'd',  'e', 'm', 'i', 'n'};
         rsp_fields.mfg_data_len = sizeof(manufacturer);
         rsp_fields.mfg_data = manufacturer;
 
@@ -197,7 +210,8 @@ static void start_advertising(void)
             adv_params.itvl_max = adv_params.itvl_min + 1;
 
             /* Start advertising */
-            status = ble_gap_adv_start(addr_type, NULL, BLE_HS_FOREVER, &adv_params, gap_event_handler, NULL);
+            status = ble_gap_adv_start(addr_type, NULL, BLE_HS_FOREVER, &adv_params,
+                                       gap_event_handler, NULL);
             if (status == 0)
             {
                 ESP_LOGI(TAG, "Advertising started!");
@@ -256,7 +270,8 @@ static void on_stack_sync(void)
 
     if (status == 0)
     {
-        status = ble_hs_id_infer_auto(0, &addr_type); /* Figure out BT address to use while advertising */
+        status = ble_hs_id_infer_auto(
+            0, &addr_type); /* Figure out BT address to use while advertising */
 
         if (status == 0)
         {
@@ -265,7 +280,8 @@ static void on_stack_sync(void)
             if (status == 0)
             {
                 char addr_str[18] = {0};
-                sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3], addr[2], addr[1], addr[0]);
+                sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3],
+                        addr[2], addr[1], addr[0]);
                 ESP_LOGI(TAG, "Device Address: %s", addr_str);
 
                 start_advertising(); /* Start advertising. */
@@ -321,7 +337,8 @@ void app_main(void)
                 ble_hs_cfg.store_status_cb = ble_store_util_status_rr;
 
                 ESP_LOGI(TAG, "Start nimble host!");
-                nimble_port_run(); /* This function will not return until nimble_port_stop() is called */
+                nimble_port_run(); /* This function will not return until nimble_port_stop() is
+                                      called */
             }
         }
         else
