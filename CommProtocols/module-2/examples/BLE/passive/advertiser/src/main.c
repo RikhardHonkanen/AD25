@@ -18,23 +18,24 @@
  *
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
 #include "esp_bt.h"
 #include "esp_log.h"
-#include "nvs_flash.h"
-#include "nimble/ble.h"
 #include "host/ble_hs.h"
 #include "host/util/util.h"
+#include "nimble/ble.h"
 #include "nimble/nimble_port.h"
+#include "nvs_flash.h"
 #include "services/gap/ble_svc_gap.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 #define TAG "Example"
 #define DEVICE_NAME "ESP32"
 
-// BLE defines appearance values to help remote devices understand what type of device they're interacting with.
-// Look at page 30 of https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
+// BLE defines appearance values to help remote devices understand what type of device they're
+// interacting with. Look at page 30 of
+// https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Assigned_Numbers/out/en/Assigned_Numbers.pdf
 #define BLE_GAP_APPEARANCE_GENERIC_TAG 0x0200
 
 static uint8_t addr_type;
@@ -129,7 +130,8 @@ static void on_stack_sync(void)
 
     if (status == 0)
     {
-        status = ble_hs_id_infer_auto(0, &addr_type); /* Figure out BT address to use while advertising */
+        status = ble_hs_id_infer_auto(
+            0, &addr_type); /* Figure out BT address to use while advertising */
 
         if (status == 0)
         {
@@ -138,7 +140,8 @@ static void on_stack_sync(void)
             if (status == 0)
             {
                 char addr_str[18] = {0};
-                sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3], addr[2], addr[1], addr[0]);
+                sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3],
+                        addr[2], addr[1], addr[0]);
                 ESP_LOGI(TAG, "Device Address: %s", addr_str);
 
                 start_advertising(); /* Start advertising. */
@@ -190,7 +193,8 @@ void app_main(void)
                 ble_hs_cfg.store_status_cb = ble_store_util_status_rr;
 
                 ESP_LOGI(TAG, "Start nimble host!");
-                nimble_port_run(); /* This function will not return until nimble_port_stop() is called */
+                nimble_port_run(); /* This function will not return until nimble_port_stop() is
+                                      called */
             }
         }
         else
