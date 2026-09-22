@@ -1,0 +1,34 @@
+<mxfile host="65bd71144e">
+    <diagram id="V6X50mM4gsTucyWhwPl0" name="Page-1">
+        <mxGraphModel dx="1586" dy="1073" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;b&gt;Application&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="400" width="400" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;b&gt;Abstraction Layer&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="440" width="400" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;b&gt;RTOS&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="480" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;b&gt;Memory&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="480" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;b&gt;IoHwAb&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="360" y="480" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;b&gt;COMStack&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="480" y="480" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&lt;b&gt;BSP&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="520" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;b&gt;ECU&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="560" width="400" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
