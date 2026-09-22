@@ -1,0 +1,15 @@
+<mxfile host="65bd71144e">
+    <diagram id="SJL029woF-Y8H-htlYtp" name="Page-1">
+        <mxGraphModel dx="1608" dy="1073" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <object label="Package1" Namespace="" id="2">
+                    <mxCell style="shape=folder;fontStyle=1;tabWidth=80;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;whiteSpace=wrap;" vertex="1" parent="1">
+                        <mxGeometry x="290" y="480" width="150" height="80" as="geometry"/>
+                    </mxCell>
+                </object>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
