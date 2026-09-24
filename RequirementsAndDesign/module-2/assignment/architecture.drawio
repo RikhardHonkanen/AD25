@@ -1,26 +1,47 @@
 <mxfile host="65bd71144e">
     <diagram id="hxROgrl3vA55VD6-YC5y" name="Page-1">
-        <mxGraphModel dx="1608" dy="1073" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1462" dy="975" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-                    <mxGeometry x="240" y="360" width="480" height="80" as="geometry"/>
+                <mxCell id="3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="140" y="360" width="560" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4" target="3">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="4" value="Watering Application" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="160" y="370" width="250" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="Watering Application" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="260" y="370" width="210" height="60" as="geometry"/>
+                <mxCell id="5" value="Ambient Application" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="430" y="370" width="250" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="Ambient Application" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="490" y="370" width="210" height="60" as="geometry"/>
+                <mxCell id="7" value="System (Abstraction)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="140" y="440" width="560" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="System" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
-                    <mxGeometry x="240" y="440" width="480" height="80" as="geometry"/>
+                <mxCell id="8" value="CAN&lt;div&gt;Service&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="630" y="480" width="70" height="160" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="640" y="520" width="80" height="160" as="geometry"/>
+                <mxCell id="9" value="BSP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#76608a;strokeColor=#432D57;fontColor=#ffffff;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="140" y="640" width="560" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="RTOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="140" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Window&lt;br&gt;&lt;div&gt;Driver&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="350" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Heater&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;Driver&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="280" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;Air Fan&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Driver&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="420" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Water Pump&lt;br&gt;&lt;div&gt;Driver&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="210" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;Lamp&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Driver&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="490" y="480" width="70" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="&lt;div&gt;LED&lt;/div&gt;&lt;div&gt;Driver&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;perimeterSpacing=0;fontSize=14;fontStyle=0" vertex="1" parent="1">
+                    <mxGeometry x="560" y="480" width="70" height="160" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
