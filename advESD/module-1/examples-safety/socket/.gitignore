@@ -1,0 +1,5 @@
+*.pem
+*.png
+client
+server
+.vscode
