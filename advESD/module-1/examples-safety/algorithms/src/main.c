@@ -1,92 +1,95 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <mbedtls/md.h>
-#include <esp_random.h>
-#include <mbedtls/rsa.h>
-#include <mbedtls/aes.h>
-#include <mbedtls/gcm.h>
-#include <mbedtls/sha256.h>
-#include <mbedtls/entropy.h>
-#include <mbedtls/ctr_drbg.h>
 #include <bootloader_random.h>
+#include <esp_random.h>
+#include <mbedtls/aes.h>
+#include <mbedtls/ctr_drbg.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/gcm.h>
+#include <mbedtls/md.h>
+#include <mbedtls/rsa.h>
+#include <mbedtls/sha256.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #define AES_SIZE 32
 #define HASH_SIZE 32
-#define RSA_SIZE 128
+#define RSA_SIZE 128 // DL updated
 #define EXPONENT 65537
 #define HMAC_KEY "secretKey"
 #define MSGLEN (RSA_SIZE / 4)
 
 static void print(const uint8_t *data, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		printf("%02X ", data[i]);
-	}
-	printf("\n");
+    for (size_t i = 0; i < size; i++)
+    {
+        printf("%02X ", data[i]);
+    }
+    printf("\n");
 }
 
 void app_main(void)
 {
-	uint8_t enc_iv[16] = {0};
-	uint8_t dec_iv[16] = {0};
-	uint8_t aes_iv[12] = {0};
-	uint8_t aes_tag[16] = {0};
-	mbedtls_aes_context aes_ctx;
-	mbedtls_gcm_context gcm_ctx;
-	mbedtls_rsa_context rsa_ctx;
-	mbedtls_md_context_t hmac_ctx;
-	mbedtls_entropy_context entropy;
-	uint8_t aes_key[AES_SIZE] = {0};
-	mbedtls_ctr_drbg_context ctr_drbg;
-	mbedtls_sha256_context sha256_ctx;
-	const uint8_t AAD[] = {0x01, 0x02, 0x03, 0x04}; // Optional AAD (Additional Authentication Data)
+    uint8_t enc_iv[16] = {0};
+    uint8_t dec_iv[16] = {0};
+    uint8_t aes_iv[12] = {0};
+    uint8_t aes_tag[16] = {0};
+    mbedtls_aes_context aes_ctx;
+    mbedtls_gcm_context gcm_ctx;
+    mbedtls_rsa_context rsa_ctx;
+    mbedtls_md_context_t hmac_ctx;
+    mbedtls_entropy_context entropy;
+    uint8_t aes_key[AES_SIZE] = {0};
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_sha256_context sha256_ctx;
+    const uint8_t AAD[] = {0x01, 0x02, 0x03, 0x04}; // Optional AAD (Additional Authentication Data)
 
-	// RNG Initialization
-	mbedtls_entropy_init(&entropy);
-	mbedtls_ctr_drbg_init(&ctr_drbg);
+    // RNG Initialization
+    mbedtls_entropy_init(&entropy);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
 
-	bootloader_random_enable();
-	for (size_t i = 0; i < sizeof(aes_key); i++)
-	{
-		aes_key[i] = esp_random() % 256;
-	}
-	bootloader_random_disable();
+    bootloader_random_enable();
+    for (size_t i = 0; i < sizeof(aes_key); i++)
+    {
+        aes_key[i] = esp_random() % 256;
+    }
+    bootloader_random_disable();
 
-	assert(0 == mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, aes_key, sizeof(aes_key)));
+    assert(0 == mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, aes_key,
+                                      sizeof(aes_key)));
 
-	// SHA-256
-	mbedtls_sha256_init(&sha256_ctx);
+    // SHA-256
+    mbedtls_sha256_init(&sha256_ctx);
 
-	// HMAC-SHA256
-	mbedtls_md_init(&hmac_ctx);
-	assert(0 == mbedtls_md_setup(&hmac_ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1));
+    // HMAC-SHA256
+    mbedtls_md_init(&hmac_ctx);
+    assert(0 == mbedtls_md_setup(&hmac_ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1));
 
-	// AES-256
-	assert(0 == mbedtls_ctr_drbg_random(&ctr_drbg, aes_key, sizeof(aes_key)));
+    // AES-256
+    assert(0 == mbedtls_ctr_drbg_random(&ctr_drbg, aes_key, sizeof(aes_key)));
 
-	mbedtls_aes_init(&aes_ctx);
-	assert(0 == mbedtls_aes_setkey_enc(&aes_ctx, aes_key, sizeof(aes_key) * CHAR_BIT));
+    mbedtls_aes_init(&aes_ctx);
+    assert(0 == mbedtls_aes_setkey_enc(&aes_ctx, aes_key, sizeof(aes_key) * CHAR_BIT));
 
-	mbedtls_gcm_init(&gcm_ctx);
-	assert(0 == mbedtls_gcm_setkey(&gcm_ctx, MBEDTLS_CIPHER_ID_AES, aes_key, sizeof(aes_key) * CHAR_BIT));
+    mbedtls_gcm_init(&gcm_ctx);
+    assert(0 == mbedtls_gcm_setkey(&gcm_ctx, MBEDTLS_CIPHER_ID_AES, aes_key,
+                                   sizeof(aes_key) * CHAR_BIT));
 
-	// RSA initialization and key generation
-	mbedtls_rsa_init(&rsa_ctx);
-	assert(0 == mbedtls_rsa_gen_key(&rsa_ctx, mbedtls_ctr_drbg_random, &ctr_drbg, RSA_SIZE * CHAR_BIT, EXPONENT));
+    // RSA initialization and key generation
+    mbedtls_rsa_init(&rsa_ctx);
+    assert(0 == mbedtls_rsa_gen_key(&rsa_ctx, mbedtls_ctr_drbg_random, &ctr_drbg,
+                                    RSA_SIZE * CHAR_BIT, EXPONENT));
 
-	char message[RSA_SIZE] = {0};
-	uint8_t cipher[RSA_SIZE] = {0};
+    char message[RSA_SIZE] = {0};
+    uint8_t cipher[RSA_SIZE] = {0};
 
-	while (1)
-	{
-		mbedtls_ctr_drbg_random(&ctr_drbg, (uint8_t *)message, MSGLEN);
-		for (size_t i = 0; i < MSGLEN; i++)
-		{
-			message[i] = ((0 == (message[i] % 2)) ? 'a' : 'A') + (message[i] % 26);
-		}
-		printf("\n\nMessage    : %s\n", message);
+    while (1)
+    {
+        mbedtls_ctr_drbg_random(&ctr_drbg, (uint8_t *)message, MSGLEN);
+        for (size_t i = 0; i < MSGLEN; i++)
+        {
+            message[i] = ((0 == (message[i] % 2)) ? 'a' : 'A') + (message[i] % 26);
+        }
+        printf("\n\nMessage    : %s\n", message);
 
 #if 0
         /**************************************************************************************/
@@ -243,6 +246,6 @@ void app_main(void)
         printf("Message    : %s\n", message);
 #endif
 
-		sleep(2);
-	}
+        sleep(2);
+    }
 }
